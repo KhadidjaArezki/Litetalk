@@ -1,17 +1,17 @@
 import Logo from '../logo/Logo'
-import NavLinks from '../navlinks/NavLinks'
+import NavbarLinks from '../navbarlinks/NavbarLinks'
 import User from '../user/User'
 import styles from '../../styles/Navbar.module.css'
 
 function Navbar() {
   return (
-    <div className={styles.navbar}>
+    <nav className={styles.navbar}>
       <div className={`container ${styles.navbar__inner}`}>
         <Logo />
-        <NavLinks />
+        <NavbarLinks />
         <User />
       </div>
-    </div>
+    </nav>
   )
 }
 

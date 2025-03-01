@@ -1,45 +1,24 @@
-import React, { Fragment } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { nanoid } from '@reduxjs/toolkit'
-import { login, logout } from '../../store/features/users/usersSlice'
 import styles from '../../styles/Button.module.css'
 
-function Button() {
-  const users = useSelector((state) => state.users)
-  const dispatch = useDispatch()
-
-  const handleLogin = () => {
-    dispatch(login({
-      id: nanoid(),
-      name: 'Moody Mudiaga',
-    }))
-  }
-
-  const handleLogout = () => {
-    dispatch(logout())
-  }
-
+function Button({
+  type, text, className, icon, iconAlt, ...props
+}) {
   return (
-    <>
-      <h1>
-        Welcome,
-        {users.name}
-      </h1>
-      <button
-        type="button"
-        className={styles.Button}
-        onClick={handleLogin}
-      >
-        Log In
-      </button>
-      <button
-        type="button"
-        className={styles.Button}
-        onClick={handleLogout}
-      >
-        Log Out
-      </button>
-    </>
+    /* eslint-disable react/button-has-type */
+    <button
+      type={type || 'button'}
+      className={`${styles.button} ${className}`}
+      {...props}
+    >
+      {/* Check if the button contains text. If yes then include it and wrap it in the span tag.
+          Wrapping it into the span tag will make this element easier to access and to work on.
+          For example in styling: button > span {display:none} */}
+      {text && <span>{text}</span>}
+
+      {/* Check if the button contains an icon. If yes then include the icon inside the button. */}
+      {icon && <img src={icon} alt={iconAlt} />}
+    </button>
+    /* eslint-enable react/button-has-type */
   )
 }
 

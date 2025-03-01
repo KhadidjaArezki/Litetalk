@@ -1,5 +1,5 @@
 {
-  "name": "litetalk",
+  "name": "server",
   "version": "1.0.0",
   "description": "a lightweight app for connecting with friends",
   "main": "app.js",
@@ -34,11 +34,14 @@
     "nodemon": "^2.0.15"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.5.0",
-    "mongoose": "^6.3.0"
+    "mongoose": "^6.3.0",
+    "multer": "^1.4.4",
+    "socket.io": "^4.5.1"
   }
 }
