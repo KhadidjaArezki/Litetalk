@@ -21,7 +21,7 @@ const postUserController = async (req, res) => {
   const user = new User({
     username,
     email,
-    password: passwordHash,
+    passwordHash,
     picture: null,
     contacts: [],
     createdAt: new Date().toISOString(),
@@ -48,12 +48,17 @@ const postUserController = async (req, res) => {
     { new: true },
   )
 
+  response.cookie("jwt", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    maxAge: 24 * 60 * 60 * 1000,
+  })
   res.status(201).json({
     id: updatedUser.id,
     username: updatedUser.username,
     email: updatedUser.email,
     contacts: updatedUser.contacts,
-    refreshToken: updatedUser.refreshToken,
     token: token,
   })
 }
