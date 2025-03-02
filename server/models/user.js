@@ -6,14 +6,14 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     minLength: [3, 'username must be at least 3 characters long'],
+    unique: true,
     required: [true, 'username is required'],
   },
   email: {
     type: String,
-    unique: true,
     required: [true, 'email is required'],
   },
-  password: {
+  passwordHash: {
     type: String,
     required: [true, 'Password is required'],
   },
@@ -39,7 +39,7 @@ userSchema.set('toJSON', {
     delete returnedObject._id
     delete returnedObject.__v
     // the passwordHash should not be revealed
-    delete returnedObject.password
+    delete returnedObject.passwordhash
     delete returnedObject.createdAt
     delete returnedObject.updatedAt
   },
