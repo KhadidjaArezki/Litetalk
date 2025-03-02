@@ -2,6 +2,24 @@ POST http://localhost:3001/login
 Content-Type: application/json
 
 {
-  "email": "khadj999@gmail.com",
+  "username": "khadj999",
   "password": "salainen"
+}
+
+###
+POST http://localhost:3001/login
+Content-Type: application/json
+
+{
+  "username": "root_user",
+  "password": "secretpassword"
+}
+
+###
+POST http://localhost:3001/login
+Content-Type: application/json
+
+{
+  "username": "banyaz",
+  "password": "bunnies"
 }
