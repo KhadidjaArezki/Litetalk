@@ -11,7 +11,7 @@ const tokenRouter = require('./routes/tokenRouter')
 const peopleRouter = require('./routes/peopleRouter')
 
 // Import middlewares
-const { MONGODB_URI } = require('./utils/config')
+const { MONGODB_URI, SERVER_URL } = require('./utils/config')
 const { infoLogger, errorLogger } = require('./utils/logger')
 const middleware = require('./utils/middleware')
 
@@ -33,6 +33,12 @@ mongoose.connect(MONGODB_URI, {
 
 // Use app to point express to the client build which is in the root folder
 app.use(express.static('../build'))
+
+const corsOption = {
+  origin: [SERVER_URL],
+  credentials: true,
+}
+app.use(cors(corsOption))
 
 /* Use app middleware in this order */
 app.use(cors())
