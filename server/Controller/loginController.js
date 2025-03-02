@@ -3,14 +3,14 @@ const User = require('../models/user')
 const { generateAllTokens } = require('../utils/helper')
 
 const loginController = async (req, res) => {
-  const { email, password } = req.body
-  const user = await User.findOne({ email: email })
+  const { username, password } = req.body
+  const user = await User.findOne({ username: username })
 
   /* If user was not found or password is incorrect     */
   /* passwordCorrect is equal to false, otherwise, true */
   const passwordCorrect = user === null
     ? false
-    : await bcrypt.compare(password, user.password)
+    : await bcrypt.compare(password, user.passwordHash)
 
   if (!(user && passwordCorrect)) {
     return res.status(401).json({
