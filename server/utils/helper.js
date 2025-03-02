@@ -24,17 +24,18 @@ const generateAllTokens = (user) => {
     email: user.email,
   }
 
-  /* Access token expires every 15 minutes while */
-  /* the refresh token has no expiration date.   */
+  /* Access token expires every 5 minutes while */
+  /* the refresh token lasts 12 hours.   */
   const token = jwt.sign(
     userForToken,
     process.env.TOKEN_SECRET,
-    { expiresIn: '15m' }
+    { expiresIn: '5m' }
   )
 
   const refreshToken = jwt.sign(
     userForToken,
     process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: '12h' }
   )
 
   return {
