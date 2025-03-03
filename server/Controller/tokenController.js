@@ -21,7 +21,7 @@ const getTokenController = async (req, res) => {
   })
 
   // Calling exec is not neccessary, but helps with debugging
-  const foundUser = await User.findOne({ oldRefreshToken }).exec()
+  const foundUser = await User.findOne({ refreshToken: oldRefreshToken }).exec()
 
   jwt.verify(oldRefreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
     if (err?.name === "JsonWebTokenError") {
@@ -76,14 +76,34 @@ const getTokenController = async (req, res) => {
 
 /* Controller to delete user's refresh token on logout */
 const deleteTokenController = async (req, res) => {
-  const user = await User.findById(req.params.id)
-  if (!user) {
-    return res.status(404).end()
+  const cookies = req.cookies
+  if (!cookies?.jwt) return res.sendStatus(204) //No content
+  const oldRefreshToken = cookies.jwt
+
+  // Is refreshToken in db? If not, reuse detected!
+  const foundUser = await User.findOne({ refreshToken: oldRefreshToken }).exec()
+  if (!foundUser) {
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    })
+    return res.sendStatus(204)
   }
 
-  user.refreshToken = ''
-  await user.save()
-  res.status(200)
+  // Delete refreshToken in db
+  foundUser.refreshToken = foundUser.refreshToken.filter(
+    (rt) => rt !== oldRefreshToken
+  )
+  foundUser.updatedAt = new Date().toISOString()
+  await foundUser.save()
+
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    sameSite: "None",
+    secure: true,
+  })
+  res.sendStatus(204)
 }
 
 module.exports = {

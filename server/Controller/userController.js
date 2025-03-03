@@ -52,7 +52,7 @@ const postUserController = async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "None",
-    maxAge: 24 * 60 * 60 * 1000,
+    maxAge: 12 * 60 * 60 * 1000,
   })
   res.status(201).json({
     id: updatedUser.id,

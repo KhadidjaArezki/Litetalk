@@ -8,6 +8,6 @@ const {
 const router = Router()
 
 router.get('/', getTokenController)
-router.delete('/:id', deleteTokenController)
+router.delete('/', deleteTokenController)
 
 module.exports = router
