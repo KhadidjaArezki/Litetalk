@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     },
   ],
   createdAt: mongoose.Schema.Types.String,
-  refreshToken: mongoose.Schema.Types.String,
+  refreshToken: [mongoose.Schema.Types.String],
   updatedAt: mongoose.Schema.Types.String,
 })
 
@@ -39,7 +39,7 @@ userSchema.set('toJSON', {
     delete returnedObject._id
     delete returnedObject.__v
     // the passwordHash should not be revealed
-    delete returnedObject.passwordhash
+    delete returnedObject.passwordHash
     delete returnedObject.createdAt
     delete returnedObject.updatedAt
   },
