@@ -3,6 +3,7 @@ const User = require('../models/user')
 const { generateAllTokens } = require('../utils/helper')
 
 const loginController = async (req, res) => {
+  const cookies = req.cookies
   const { username, password } = req.body
   const user = await User.findOne({ username: username })
 
@@ -17,22 +18,36 @@ const loginController = async (req, res) => {
       error: 'invalid user credentials'
     })
   }
-  
+
   const { token, refreshToken } = generateAllTokens(user)
+  const newRefreshToken = refreshToken
+  // If a cookie is sent with an rt, remove it from user rt array
+  // to be replaced by a new one.
+  let newRefreshTokenArray = !cookies?.jwt
+    ? user.refreshToken
+    : user.refreshToken.filter((rt) => rt !== cookies.jwt)
 
-  /* Update token and refresh token in user document */
-  const userToUpdate = {
-    refreshToken,
+  if (cookies?.jwt) {
+    const refreshToken = cookies.jwt
+    const foundToken = await User.findOne({ refreshToken }).exec()
+
+    /* Detected refresh token reuse!
+     * clear user's stored RTs and cookie
+     */
+    if (!foundToken) {
+      newRefreshTokenArray = []
+    }
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    })
   }
-  
-  /* findByIdAndUpdate here takes three arguments the user id, an object with the fields */
-  /* to update, and an options object. if the `new `field is true, return the modified   */
-  /* document rather than the original.                                                  */
 
-  /* The populate method is then called on the query object created by findByIdAndUpdate */
-  /* It is used to fetch data from other documents or collections to fill the fields we  */
-  /* need from our reference field: contacts. populate takes two arguments: the field to */
-  /* populate - contacts - and an object representing the data that must be returned.    */
+  // Saving refreshToken with current user
+  const userToUpdate = {
+    refreshToken: [...newRefreshTokenArray, newRefreshToken]
+  }
   const updatedUser = await User.findByIdAndUpdate(
     user.id,
     {
@@ -45,12 +60,19 @@ const loginController = async (req, res) => {
     picture: 1,
   })
 
+  // Creates Secure Cookie with refresh token
+  res.cookie("jwt", newRefreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    maxAge: 12 * 60 * 60 * 1000,
+  })
+
   res.status(200).json({
     id: updatedUser.id,
     username: updatedUser.username,
     email: updatedUser.email,
     contacts: updatedUser.contacts,
-    refreshToken: updatedUser.refreshToken,
     token: token,
   })
 }
