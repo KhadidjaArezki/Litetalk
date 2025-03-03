@@ -1,6 +1,3 @@
-POST http://localhost:3001/token
-Content-Type: application/json
-
-{
-  "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTE2NzFjYzBlMTU0ODdmZTIwN2QzMiIsInVzZXJuYW1lIjoia2hhZGo5OTkiLCJlbWFpbCI6ImtoYWRqOTk5QGdtYWlsLmNvbSIsImlhdCI6MTY1MzY5NzQ4OH0.gn5Ppw0IQCnWOvzBhJ18z1ldx2VNNaQfapwEHnXp3Ec"
-}
+curl --request GET --url http://localhost:3001/token -H 'cookie: jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ5MjI2MTE2YWQ3Njg0Y2IxM2I5MiIsInVzZXJuYW1lIjoicm9vdF91c2VyIiwiZW1haWwiOiJyb290QGdtYWlsLmNvbSIsImlhdCI6MTc0MTAwOTQ2NSwiZXhwIjoxNzQxMDUyNjY1fQ.BOv3x71o0noDMall4cz6vZ9EbbkSZsl72kD7V4aNItQ; Max-Age=43200; Path=/; Expires=Tue, 04 Mar 2025 01:44:26 GMT; HttpOnly; Secure; SameSite=None'
+#GET http://localhost:3001/token
+#Cookie: 'jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ5MjI2MTE2YWQ3Njg0Y2IxM2I5MiIsInVzZXJuYW1lIjoicm9vdF91c2VyIiwiZW1haWwiOiJyb290QGdtYWlsLmNvbSIsImlhdCI6MTc0MTAwOTQ2NSwiZXhwIjoxNzQxMDUyNjY1fQ.BOv3x71o0noDMall4cz6vZ9EbbkSZsl72kD7V4aNItQ; Max-Age=43200; Path=/; Expires=Tue, 04 Mar 2025 01:44:26 GMT; HttpOnly; Secure; SameSite=None'

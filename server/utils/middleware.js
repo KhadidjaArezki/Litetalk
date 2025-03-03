@@ -29,11 +29,11 @@ const unknownEndpoint = (_, response) => {
 
 // eslint-disable-next-line consistent-return
 const errorHandler = (error, _, response, next) => {
-  errorLogger(error.message)
-
-  if (error.name === 'CastError' && error.kind === 'ObjectId') {
+  errorLogger(error.message) 
+  
+  if (error.name === 'CastError' && error.kind === '[ObjectId]') {
     return response.status(400).json({
-      error: 'malformatted id',
+      error: `malformatted id: ${error.reason.value}`,
     })
   }
   if (error.name === 'ValidationError') {

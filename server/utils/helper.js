@@ -29,7 +29,7 @@ const generateAllTokens = (user) => {
   const token = jwt.sign(
     userForToken,
     process.env.TOKEN_SECRET,
-    { expiresIn: '5m' }
+    { expiresIn: '5h' }
   )
 
   const refreshToken = jwt.sign(

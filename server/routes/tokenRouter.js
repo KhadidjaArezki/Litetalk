@@ -1,13 +1,13 @@
 const { Router } = require('express')
 
 const {
-  postTokenController,
+  getTokenController,
   deleteTokenController,
 } = require('../Controller/tokenController')
 
 const router = Router()
 
-router.post('/', postTokenController)
+router.get('/', getTokenController)
 router.delete('/:id', deleteTokenController)
 
 module.exports = router
