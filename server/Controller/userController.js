@@ -35,7 +35,7 @@ const postUserController = async (req, res) => {
 
   /* Update token and refresh token in user document */
   const userToUpdate = {
-    refreshToken,
+    refreshToken: [refreshToken],
   }
 
   /* findByIdAndUpdate here takes three arguments the user id, an object with the fields */
@@ -48,7 +48,7 @@ const postUserController = async (req, res) => {
     { new: true },
   )
 
-  response.cookie("jwt", refreshToken, {
+  res.cookie("jwt", refreshToken, {
     httpOnly: true,
     secure: true,
     sameSite: "None",
@@ -69,7 +69,7 @@ const putUserController = async (req, res) => {
   if (!user) {
     return res.status(404).end()
   }
-  
+
   const token = getTokenFromHeader(req)
   /* use the stored secret to validate the token */
   const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
@@ -87,7 +87,7 @@ const putUserController = async (req, res) => {
     })
   }
 
-  const { username, email, friends } = req.body
+  let { username, email, friends } = req.body
 
   /* picture can be null or an array of bytes */
   const picture = req.body.picture === null
@@ -96,6 +96,8 @@ const putUserController = async (req, res) => {
     data: new Buffer.from(req.file.buffer, 'base64'),
     contentType: req.file.mimetype
   }
+  // remove duplicate friends and prevent user from befriending themselves
+  friends = [...new Set(friends)].filter(f => f != user.id)
   const userToUpdate = {
     username,
     email,
@@ -117,7 +119,13 @@ const putUserController = async (req, res) => {
     picture: 1,
   })
 
-  res.status(200).send(updatedUser)
+  res.status(200).json({
+    id: updatedUser.id,
+    username: updatedUser.username,
+    email: updatedUser.email,
+    picture: updatedUser.picture,
+    contacts: updatedUser.contacts,
+  })
 }
 
 /* Controller to delete user profile */
