@@ -1,0 +1,10 @@
+POST http://localhost:3001/message
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ5MjI2MTE2YWQ3Njg0Y2IxM2I5MiIsInVzZXJuYW1lIjoicm9vdF91c2VyIiwiZW1haWwiOiJyb290QGdtYWlsLmNvbSIsImlhdCI6MTc0MTIwMzI0NywiZXhwIjoxNzQxMjIxMjQ3fQ.3Nf5KL1mG1mmGElDhPW3F8m1e2FnoPL0_GFkrAEj4_E
+
+{
+  "userId": "67c49226116ad7684cb13b92",
+  "friendId": "67c493456ad88f62eff42f5f",
+  "timestamp": "2025-03-05T21:56:07.959Z",
+  "content": "still coding?"
+}

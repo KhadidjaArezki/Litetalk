@@ -1,19 +1,19 @@
-PUT http://localhost:3001/user/67c369accbd688a40120d859
+PUT http://localhost:3001/user/67c49226116ad7684cb13b92
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ5MjI2MTE2YWQ3Njg0Y2IxM2I5MiIsInVzZXJuYW1lIjoicm9vdF91c2VyIiwiZW1haWwiOiJyb290QGdtYWlsLmNvbSIsImlhdCI6MTc0MDk0MTkyMCwiZXhwIjoxNzQwOTU5OTIwfQ.UGEOMDyCyr_zhAp3bksDlAHwvfhMGrauR6-qN3LXx0s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ5MjI2MTE2YWQ3Njg0Y2IxM2I5MiIsInVzZXJuYW1lIjoicm9vdF91c2VyIiwiZW1haWwiOiJyb290QGdtYWlsLmNvbSIsImlhdCI6MTc0MTIwMzI0NywiZXhwIjoxNzQxMjIxMjQ3fQ.3Nf5KL1mG1mmGElDhPW3F8m1e2FnoPL0_GFkrAEj4_E
 
 {
   "username": "root_user",
   "email": "root@gmail.com",
   "picture": null,
-  "friends": ["67c4572228693c82d97ceb3d"]
+  "friends": ["67c493456ad88f62eff42f5f"]
 }
 
 ####
 # malformatted friend id
 PUT http://localhost:3001/user/67c4572228693c82d97ceb3d
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ5MzQ1NmFkODhmNjJlZmY0MmY1ZiIsInVzZXJuYW1lIjoia2hhZGo5OTkiLCJlbWFpbCI6ImtoYWRqOTk5QGdtYWlsLmNvbSIsImlhdCI6MTc0MDkzNjAwNSwiZXhwIjoxNzQwOTU0MDA1fQ.U9P2Kq8FPbJuX1od2tsrvgFwZUhHDD46gRdpzygmSCU
+Authorization: Bearer 
 
 {
   "username": "khadj999",
@@ -26,7 +26,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ5MzQ1N
 # cannot befriend yourself
 PUT http://localhost:3001/user/67c4572228693c82d97ceb3d
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzQ5MzQ1NmFkODhmNjJlZmY0MmY1ZiIsInVzZXJuYW1lIjoia2hhZGo5OTkiLCJlbWFpbCI6ImtoYWRqOTk5QGdtYWlsLmNvbSIsImlhdCI6MTc0MDkzNjAwNSwiZXhwIjoxNzQwOTU0MDA1fQ.U9P2Kq8FPbJuX1od2tsrvgFwZUhHDD46gRdpzygmSCU
+Authorization: Bearer 
 
 {
   "username": "khadj999",

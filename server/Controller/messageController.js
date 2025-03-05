@@ -51,24 +51,16 @@ const getMessageController = async (req, res, next) => {
     const userMessages = await Message.find().or([
       { sender: id },
       { receiver: id },
-    ])
-    // get user friends
-    const user = await User.findById(id)
-    const userFriends = user.contacts
-    // map the userFriends array into objects with friend_id and messages for each friend
-    const userChats = userFriends.reduce((arr, friend) => {
-      const chats = userMessages.filter(
-        (message) => message.sender.toString() === friend.toString()
-          || message.receiver.toString() === friend.toString(),
-      )
-      arr.push({
-        friendId: friend,
-        messages: chats
-      })
-      return arr
-    }, [])
-    // if there is a match, send 200 status with result
-    res.status(200).send(userChats)
+    ]).sort({timestamp: 'desc'})
+
+    const chats = {}
+    userMessages.forEach(m => {
+      const friendId = m.sender == id ? m.receiver : m.sender
+      if (! (friendId in chats) ) chats[friendId] = []
+      chats[friendId].push(m)
+    })
+
+    res.status(200).send(chats)
   } catch (error) {
     // if there is an error, pass it to the error middleware
     next(error)
