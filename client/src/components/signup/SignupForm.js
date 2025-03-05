@@ -90,25 +90,25 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
           ? (
             <SignupFormField
               type="text"
-              name="username"
-              placeholder="Your Name"
-              iconSrc={userIcon}
+              name="email"
+              placeholder="Your Email"
+              iconSrc={emailIcon}
               handleInput={handleInput}
               formChoice={formChoice}
-              error={errors.username}
-              value={inputValues.name}
+              error={errors.email}
+              value={inputValues.email}
             />
           ) : null}
 
         <SignupFormField
           type="text"
-          name="email"
-          placeholder="Your Email"
-          iconSrc={emailIcon}
+          name="username"
+          placeholder="Your Name"
+          iconSrc={userIcon}
           handleInput={handleInput}
           formChoice={formChoice}
-          error={errors.email}
-          value={inputValues.email}
+          error={errors.username}
+          value={inputValues.name}
         />
 
         <SignupFormField
