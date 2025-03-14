@@ -203,7 +203,7 @@ export const logIn = async (username, password) => {
     // return the user object if login succeeds
     return response.data
   } catch (error) {
-    // todo: add better error handling
+    // TODO: add better error handling
     // log the error message to the browser console
     console.log(error)
   }
