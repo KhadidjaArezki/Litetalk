@@ -188,12 +188,12 @@ export function signUpUser({ username, email, password }) {
   }
 }
 
-export function loginUser({ email, password }) {
+export function loginUser({ username, password }) {
   // return the async action that will call the dispatch function
   return async (dispatch) => {
     try {
       // make the fetch request using the appropriate userService function
-      const response = await userService.logIn(email, password)
+      const response = await userService.logIn(username, password)
 
       // The successfuly user object (response) returned from the server contains:
       // the username, email, id, picture, contacts, token, refreshToken, and timestamps.
