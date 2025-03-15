@@ -1,21 +1,21 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { setCredentials, resetCredentials } from "./authReducer"
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { setCredentials, resetCredentials } from './authReducer'
 
 const BASE_URL = process.env.REACT_APP_BASE_URL
-const REFRESH_URI = "/token"
+const REFRESH_URI = process.env.REACT_APP_REFRESH_URI
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
   // Send back http-only secure cookie with each authed query
-  credentials: "include",
+  credentials: 'include',
   // Attach token to headers on each query
   prepareHeaders: (headers, { getState }) => {
-    const token = getState().auth.token
+    const { token } = getState().auth
     if (token) {
-      headers.set("authorization", `Bearer ${token}`)
+      headers.set('authorization', `Bearer ${token}`)
     }
     return headers
-  }
+  },
 })
 
 /* Create a custom query function to wrap base query,
@@ -28,22 +28,23 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
   if (result?.error?.status === 403 || result?.error?.status === 401) {
     const refreshResult = await baseQuery(REFRESH_URI, api, extraOptions)
     if (refreshResult?.data) {
-      const user = api.getState().auth.user
+      const { user } = api.getState().auth
       api.dispatch(setCredentials({
         username: user,
-        ...refreshResult.data
-      }))      
+        ...refreshResult.data,
+      }))
       // Retry original request with new token
       result = await baseQuery(args, api, extraOptions)
-    }
-    // If user is not authorized to get token, log out
-    else {
+      // If user is not authorized to get token, log out
+    } else {
       await baseQuery(
-        { url: REFRESH_URI,
-          method: "DELETE"
+        {
+          url: REFRESH_URI,
+          method: 'DELETE',
         },
         api,
-        extraOptions)
+        extraOptions,
+      )
       api.dispatch(resetCredentials())
     }
   }
@@ -54,5 +55,6 @@ export const apiSlice = createApi({
   baseQuery: baseQueryWithReAuth,
   // You can extend api slices in authApiReducer
   // to separate auth functionality from other features
-  endpoints: (builder) => ({})
+  // eslint-disable-next-line no-unused-vars
+  endpoints: (builder) => ({}),
 })
