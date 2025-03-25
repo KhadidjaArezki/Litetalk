@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const { generateAllTokens } = require('../utils/helper')
 
 /* Get a new auth token by sending a refresh
    token via an httpOnly secure cookie.
@@ -9,7 +10,6 @@ const User = require('../models/user')
 const getTokenController = async (req, res) => {
   const cookies = req.cookies
   if (!cookies?.jwt) {
-    console.log(cookies)
     return res.sendStatus(401)
   }
 
@@ -58,13 +58,19 @@ const getTokenController = async (req, res) => {
 
     // All is good
     const { token, refreshToken } = generateAllTokens(foundUser)
-    const newRefreshToken = refreshToken
-    foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken]
-    foundUser.updatedAt = new Date().toISOString()
-    await foundUser.save()
-
+    const userToUpdate = {
+      refreshToken: [...newRefreshTokenArray, refreshToken],
+    }
+    await User.findByIdAndUpdate(
+      foundUser.id,
+      {
+        ...userToUpdate,
+        updatedAt: new Date().toISOString(),
+      },
+      { new: true },
+    )
     // Creates Secure Cookie with refresh token
-    res.cookie("jwt", newRefreshToken, {
+    res.cookie("jwt", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "None",
