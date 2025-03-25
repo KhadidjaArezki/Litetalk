@@ -15,7 +15,7 @@ const router = Router()
 
 router.get('/', getUsersController)
 router.post('/', postUserController)
-router.put('/:id', upload.single('image'), putUserController)
+router.put('/:id', upload.single('picture'), putUserController)
 router.delete('/:id', deleteUserController)
 
 module.exports = router
