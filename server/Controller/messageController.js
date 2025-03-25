@@ -3,6 +3,7 @@ const Message = require('../models/message')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const { getTokenFromHeader } = require('../utils/helper')
+const { getUser } = require('../socket/index')
 
 // import helper function
 const errorConfig = require('../utils/helper')
@@ -51,15 +52,22 @@ const getMessageController = async (req, res, next) => {
     const userMessages = await Message.find().or([
       { sender: id },
       { receiver: id },
-    ]).sort({timestamp: 'desc'})
+    ])
 
-    const chats = {}
+    const chatsObj = {}
     userMessages.forEach(m => {
       const friendId = m.sender == id ? m.receiver : m.sender
-      if (! (friendId in chats) ) chats[friendId] = []
-      chats[friendId].push(m)
+      if (! (friendId in chatsObj) ) chatsObj[friendId] = []
+      chatsObj[friendId].push(m)
     })
 
+    const chats = []
+    for (const friendId in chatsObj) {
+      chats.push({
+        friendId,
+        messages: chatsObj[friendId]
+      })
+    }
     res.status(200).send(chats)
   } catch (error) {
     // if there is an error, pass it to the error middleware
@@ -81,9 +89,8 @@ const postMessageController = async (req, res, next) => {
   // get the request payload
   // eslint-disable-next-line object-curly-newline
   const { userId, friendId, timestamp } = req.body
-  
   // content is either a string or an image file
-  const content = req.body.content || {
+  const content = req.body.content ?? {
     data: new Buffer.from(req.file.buffer, 'base64'),
     contentType: req.file.mimetype
   }
@@ -99,20 +106,22 @@ const postMessageController = async (req, res, next) => {
     next(error)
   }
 
-  // if there is a message in the request, then
   try {
-    // create messageSchema object
     const message = {
       content,
       receiver: friendId,
       sender: userId,
       timestamp,
     }
-    // create a new message based on messageSchema
     const newMessage = new Message(message)
-    // save the message in the database
     const result = await newMessage.save()
-    // send a resource created response together with the new message
+    const io = req.app.locals.io
+    const receiver = getUser(friendId)
+    io.to(receiver?.socketId).emit('getMessage', {
+      userId,
+      message,
+      timestamp,
+    })
     res.status(201).send(result)
   } catch (error) {
     // if the operation is unsuccessful,

@@ -3,7 +3,7 @@ const app = require('./app')
 require('dotenv').config()
 const { infoLogger } = require('./utils/logger')
 const { PORT } = require('./utils/config')
-const SetSocketServer = require('./socket/index')
+const { SetSocketServer } = require('./socket/index')
 
 const server = http.createServer(app)
 
@@ -16,6 +16,8 @@ const io = require('socket.io')(server, {
   },
 })
 
+// Store the io instance in app.locals so it can be accessed in route handlers
+app.locals.io = io
 /* Initialize the socket server */
 SetSocketServer(io)
 
