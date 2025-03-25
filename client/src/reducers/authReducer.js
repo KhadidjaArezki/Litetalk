@@ -1,67 +1,111 @@
-import { createSlice } from "@reduxjs/toolkit"
-
-const createCookieInHour = (cookieName, cookieValue, hourToExpire) => {
-    let date = new Date();
-    date.setTime(date.getTime()+(hourToExpire*60*60*1000));
-    document.cookie = cookieName + " = " + cookieValue + "; expires = " +date.toGMTString();
-}
+/* eslint no-param-reassign: 0 */
+import { createSlice } from '@reduxjs/toolkit'
+import defaultPicture from '../icons/default-user-profile-image.png'
+import {
+  createCookieInHour,
+  resetCookie,
+  getCookieValue,
+} from '../utils/cookieParser'
 
 const storedUserData = () => {
-  const cookie = document.cookie.split(';')
-  const storedId = cookie[0]?.split('=')[1]
-  const storedUserName = cookie[1]?.split('=')[1]
-  const storedEmail = cookie[2]?.split('=')[1]
-  const storedFriends = cookie[3]?.split('=')[1]
-  const storedUserToken = cookie[4]?.split('=')[1]
-  console.log('cookie : ', storedUserName + '\n' + storedUserToken)
-  return [ storedId, storedUserName, storedEmail, storedFriends, storedUserToken ]
+  const storedId = getCookieValue(0)
+  const storedUserName = getCookieValue(1)
+  const storedEmail = getCookieValue(2)
+  const storedUserToken = getCookieValue(3)
+  return [storedId, storedUserName, storedEmail, storedUserToken]
 }
-const [ storedId, storedUserName, storedEmail, storedFriends, storedUserToken ] = storedUserData()
+const [
+  storedId, storedUserName, storedEmail, storedUserToken,
+] = storedUserData()
+
+const storedPicture = localStorage.getItem('user_profile_picture')
+  ? JSON.parse(localStorage.getItem('user_profile_picture'))
+  : undefined
+
+const storedFriends = localStorage.getItem('friends')
+  ? JSON.parse(localStorage.getItem('friends'))
+  : undefined
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState: {
-    id: storedId || null,
-    user: storedUserName || null,
-    email: storedEmail || null,
-    friends: storedFriends || null,
-    token: storedUserToken || null,
-    isOnline: true
+    id: storedId ?? null,
+    username: storedUserName ?? null,
+    email: storedEmail ?? null,
+    picture: storedPicture ?? null,
+    friends: storedFriends ?? null,
+    token: storedUserToken ?? null,
+    isOnline: true,
   },
   reducers: {
     setCredentials: (state, action) => {
-      const { id, username, email, contacts, token } = action.payload
+      const {
+        id, username, email, picture, friends, token,
+      } = action.payload
       state.id = id
-      state.user = username
+      state.username = username
       state.email = email
-      state.friends = contacts
+      state.picture = picture?.picture
+        ? picture
+        : {
+          isDefault: !picture,
+          picture: picture ?? defaultPicture,
+        }
+      state.friends = friends
       state.token = token
       state.isOnline = true
-      createCookieInHour('id', id, 12);
-      createCookieInHour('username', username, 12);
-      createCookieInHour('email', email, 12);
-      createCookieInHour('friends', contacts, 12);
-      createCookieInHour('token', token, 12);
+      const cookieLifeInHours = process.env.REACT_APP_COOKIE_LIFE_IN_HOURS
+      createCookieInHour('id', id, cookieLifeInHours)
+      createCookieInHour('username', username, cookieLifeInHours)
+      createCookieInHour('email', email, cookieLifeInHours)
+      createCookieInHour('token', token, cookieLifeInHours)
+      localStorage.setItem('user_profile_picture', JSON.stringify(state.picture))
+      localStorage.setItem('friends', JSON.stringify(friends))
     },
+    // eslint-disable-next-line no-unused-vars
     resetCredentials: (state, _) => {
       state.id = null
-      state.user = null
+      state.username = null
       state.email = null
+      state.picture = null
       state.friends = null
       state.token = null
       state.isOnline = false
-      document.cookie.split(";").forEach((c) => {
-        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")
+      document.cookie.split(';').forEach((c) => {
+        document.cookie = resetCookie(c)
       })
-    }
-  }
+      localStorage.setItem('user_profile_picture', '')
+      localStorage.setItem('friends', '')
+      localStorage.setItem('current_friend_id', '')
+      localStorage.setItem('chats', '')
+      localStorage.clear()
+    },
+    appendFriend: (state, action) => {
+      const newFriends = state.friends.concat(action.payload)
+      state.friends = newFriends
+      localStorage.setItem('friends', JSON.stringify(newFriends))
+    },
+    removeFriend: (state, action) => {
+      const newFriends = state.friends.filter((f) => f.id !== action.payload)
+      state.friends = newFriends
+      localStorage.setItem('friends', JSON.stringify(newFriends))
+    },
+    updateProfile: (state, action) => {
+      state.username = action.payload.username
+      state.email = action.payload.email
+      state.token = action.paylod.token
+    },
+  },
 })
-export const { setCredentials, resetCredentials } = authSlice.actions
+export const {
+  setCredentials, resetCredentials, appendFriend, removeFriend,
+} = authSlice.actions
 export default authSlice.reducer
 
 export const selectCurrentId = (state) => state.auth.id
-export const selectCurrentUser = (state) => state.auth.user
+export const selectCurrentUsername = (state) => state.auth.username
 export const selectCurrentEmail = (state) => state.auth.email
+export const selectCurrentPicture = (state) => state.auth.picture
 export const selectCurrentFriends = (state) => state.auth.friends
 export const selectCurrentToken = (state) => state.auth.token
 export const selectCurrentConnectionStatus = (state) => state.auth.isOnline
