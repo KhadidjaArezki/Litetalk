@@ -1,7 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const cookieParser = require("cookie-parser")
 require('express-async-errors')
+require('dotenv').config()
 
 // Require routers here
 const messageRouter = require('./routes/messageRouter')
@@ -11,7 +13,7 @@ const tokenRouter = require('./routes/tokenRouter')
 const peopleRouter = require('./routes/peopleRouter')
 
 // Import middlewares
-const { MONGODB_URI, SERVER_URL } = require('./utils/config')
+const { MONGODB_URI } = require('./utils/config')
 const { infoLogger, errorLogger } = require('./utils/logger')
 const middleware = require('./utils/middleware')
 
@@ -34,15 +36,18 @@ mongoose.connect(MONGODB_URI, {
 // Use app to point express to the client build which is in the root folder
 app.use(express.static('../build'))
 
+const CLIENT_DEV_SERVER_URL = process.env.CLIENT_DEV_SERVER_URL
+const PROD_SERVER_URL = process.env.PROD_SERVER_URL
+
 const corsOption = {
-  origin: [SERVER_URL],
+  origin: [CLIENT_DEV_SERVER_URL, PROD_SERVER_URL],
   credentials: true,
 }
 app.use(cors(corsOption))
 
 /* Use app middleware in this order */
-app.use(cors())
 app.use(express.json())
+app.use(cookieParser())
 app.use(middleware.requestLogger)
 
 // use routers here //
