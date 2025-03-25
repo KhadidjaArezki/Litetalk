@@ -72,7 +72,8 @@ const loginController = async (req, res) => {
     id: updatedUser.id,
     username: updatedUser.username,
     email: updatedUser.email,
-    contacts: updatedUser.contacts,
+    picture: updatedUser.picture,
+    friends: updatedUser.contacts,
     token: token,
   })
 }

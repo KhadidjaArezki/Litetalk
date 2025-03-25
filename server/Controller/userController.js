@@ -58,7 +58,8 @@ const postUserController = async (req, res) => {
     id: updatedUser.id,
     username: updatedUser.username,
     email: updatedUser.email,
-    contacts: updatedUser.contacts,
+    picture: updatedUser.picture,
+    friends: updatedUser.contacts,
     token: token,
   })
 }
@@ -124,7 +125,7 @@ const putUserController = async (req, res) => {
     username: updatedUser.username,
     email: updatedUser.email,
     picture: updatedUser.picture,
-    contacts: updatedUser.contacts,
+    friends: updatedUser.contacts,
   })
 }
 
