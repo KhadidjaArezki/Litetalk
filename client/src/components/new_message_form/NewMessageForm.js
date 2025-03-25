@@ -1,15 +1,27 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styles from '../../styles/ChatRoom-styles/MessageForms.module.css'
 import sendIcon from '../../icons/chat-room/chatroom-send-icon.png'
-import { addTextMessage } from '../../store/features/messages/messagesSlice'
+import { selectCurrentFriendId, appendMessage } from '../../reducers/messageReducer'
+import { useCreateTextMsgMutation } from '../../reducers/api/messageApiSlice'
+import { selectCurrentId } from '../../reducers/authReducer'
 
 function NewMessageForm({ socketSendHandler }) {
-  const dispatch = useDispatch()
+  const userId = useSelector(selectCurrentId)
+  const currentFriendId = useSelector(selectCurrentFriendId)
 
-  const handleSubmit = (event) => {
+  const dispatch = useDispatch()
+  const [createTextMsg] = useCreateTextMsgMutation()
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
     const message = event.target.message.value
-    dispatch(addTextMessage(message))
+    const createdMessage = await createTextMsg({
+      userId,
+      friendId: currentFriendId,
+      content: message,
+      timestamp: new Date().toISOString(),
+    }).unwrap()
+    dispatch(appendMessage(createdMessage))
     event.target.message.value = '' // eslint-disable-line no-param-reassign
     socketSendHandler(message)
   }

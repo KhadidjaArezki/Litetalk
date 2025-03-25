@@ -18,7 +18,7 @@ function LatestChat({
   return (
     <button type="button" className={styles['latest-chat']} onClick={() => onOpenAChatClick(id)}>
       <div className={styles['latest-chat__image']}>
-        <img src={picture || defaultPicture} alt="profile" />
+        <img src={picture ?? defaultPicture} alt={`${username}'s profile`} />
       </div>
       <div className={styles['latest-chat__username-and-message-container']}>
         <span className={styles['latest-chat__username']}>{username}</span>

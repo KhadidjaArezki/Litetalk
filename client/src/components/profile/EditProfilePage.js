@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom'
 import ProfileForm from './ProfileForm'
 import styles from '../../styles/Profile-styles/EditProfile.module.css'
 import Button from '../button/Button'
+import { selectCurrentEmail, selectCurrentUsername } from '../../reducers/authReducer'
 
 function EditProfilePage() {
   // select the user state from redux store
-  const currentUser = useSelector(({ user }) => user)
+  const username = useSelector(selectCurrentUsername)
+  const email = useSelector(selectCurrentEmail)
 
   // use the navigation hook from react-router-dom
   const navigate = useNavigate()
@@ -27,7 +29,7 @@ function EditProfilePage() {
   return (
     <div role="contentinfo" className={styles.Edit__container}>
       <h2 className={styles.Edit__heading}>Edit Profile Information</h2>
-      <ProfileForm user={currentUser} />
+      <ProfileForm username={username} email={email} disable={false} />
       <Button
         text="Save"
         className={styles.Edit__button}

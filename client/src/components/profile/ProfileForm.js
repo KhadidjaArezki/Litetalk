@@ -1,6 +1,6 @@
 import styles from '../../styles/Profile-styles/Profileform.module.css'
 
-function ProfileForm({ user, disable }) {
+function ProfileForm({ username, email, disable }) {
   return (
     <form className={styles.Profile__form}>
       <label htmlFor="user-name" className={styles['Profile__form-label']}>
@@ -9,7 +9,7 @@ function ProfileForm({ user, disable }) {
           type="text"
           name="name"
           id="user-name"
-          defaultValue={user.username}
+          defaultValue={username}
           className={styles['Profile__form-input']}
           readOnly={disable || false}
         />
@@ -21,7 +21,7 @@ function ProfileForm({ user, disable }) {
           type="email"
           name="email"
           id="user-email"
-          defaultValue={user.email}
+          defaultValue={email}
           className={styles['Profile__form-input']}
           readOnly={disable || false}
         />

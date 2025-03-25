@@ -1,8 +1,15 @@
 /* eslint-disable react/self-closing-comp */
 import { useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { deleteUserProfile } from '../../store/features/users/usersSlice'
+import {
+  selectCurrentId,
+  selectCurrentUsername,
+  selectCurrentEmail,
+  selectCurrentPicture,
+  resetCredentials,
+} from '../../reducers/authReducer'
+import { useRemoveUserMutation } from '../../reducers/api/userApiSlice'
 import ProfileForm from './ProfileForm'
 import ProfileButton from './ProfileButton'
 import ProfileUser from './ProfileUser'
@@ -12,17 +19,22 @@ import deleteIcon from '../../icons/profile/profile-delete-icon.svg'
 import styles from '../../styles/Profile-styles/Profile.module.css'
 
 function Profile() {
-  // get the user state slice
-  const currentUser = useSelector(({ user }) => user)
-  // get the reducer action dispatch function
+  const id = useSelector(selectCurrentId)
+  const username = useSelector(selectCurrentUsername)
+  const email = useSelector(selectCurrentEmail)
+  const { picture } = useSelector(selectCurrentPicture)
+
+  const removeUser = useRemoveUserMutation()
+
   const dispatch = useDispatch()
-  // get the modal ref
+  const navigate = useNavigate()
+
   const modalRef = useRef()
-  // delete user handler
-  const handleDeleteProfile = () => {
-    // dispatch delete profile action
-    // after confirmation
-    dispatch(deleteUserProfile(currentUser.id))
+
+  const handleDeleteProfile = async () => {
+    await removeUser(id)
+    dispatch(resetCredentials())
+    navigate('/')
   }
 
   return (
@@ -46,8 +58,8 @@ function Profile() {
       {/* main section of the profile page contains the profile
       picture, the icon to edit it, and profile form controls */}
       <main className={styles.Profile__main}>
-        <ProfileUser user={currentUser} />
-        <ProfileForm user={currentUser} disable="yes" />
+        <ProfileUser userPicture={picture} />
+        <ProfileForm username={username} email={email} disable="yes" />
       </main>
 
       <Modal

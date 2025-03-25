@@ -1,14 +1,25 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import {
+  selectCurrentId,
+  selectCurrentUsername,
+  selectCurrentEmail,
+  selectCurrentPicture,
+  selectCurrentFriends,
+  removeFriend,
+} from '../../reducers/authReducer'
 import SearchBox from '../searchbox/SearchBox'
 import SearchResults from '../search_results/SearchResults'
-import { unFriend } from '../../store/features/users/usersSlice'
+import { useUpdateUserMutation } from '../../reducers/api/userApiSlice'
 
 function Friends() {
-  const userState = useSelector(({ user }) => user)
-  const {
-    id, username, email, token, picture, friends,
-  } = userState
+  const id = useSelector(selectCurrentId)
+  const username = useSelector(selectCurrentUsername)
+  const email = useSelector(selectCurrentEmail)
+  const { isDefault, picture } = useSelector(selectCurrentPicture)
+  const friends = useSelector(selectCurrentFriends)
+
+  const [updateUser] = useUpdateUserMutation()
   const dispatch = useDispatch()
 
   /* Initially, theh component renders the entire friends list */
@@ -52,12 +63,19 @@ function Friends() {
       friendsIds.splice(friendsIds.indexOf(friendId), 1)
       return friendsIds
     }
-    dispatch(unFriend({
+    const updatedUser = await updateUser({
+      id,
       username,
       email,
-      picture,
+      picture: isDefault ? null : picture,
       friends: getNewFriends(),
-    }, id, token))
+    }).unwrap()
+    const updatedFriends = updatedUser.friends
+    /* Find the friend that is in currentFriends but not in updatedFriends */
+    const friendToRemove = friends.find(
+      (friend) => !updatedFriends.some((f) => f.id === friend.id),
+    )
+    dispatch(removeFriend(friendToRemove.id))
   }
 
   return (

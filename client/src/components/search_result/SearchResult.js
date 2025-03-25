@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { useRef } from 'react'
+import { selectCurrentFriends } from '../../reducers/authReducer'
 import styles from '../../styles/SearchResults.module.css'
 import AddFriendButton from '../button/AddFriendButton'
 import UnfriendButton from '../button/UnfriendButton'
@@ -16,7 +17,7 @@ function SearchResult({
   confirmButtonText,
   formHandler,
 }) {
-  const friends = useSelector(({ user }) => user.friends)
+  const friends = useSelector(selectCurrentFriends)
   const modalRef = useRef()
 
   const showButton = () => {

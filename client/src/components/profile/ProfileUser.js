@@ -5,7 +5,7 @@ import defaultPicture from '../../icons/default-user-profile-image.png'
 import updateIcon from '../../icons/profile/profile-picture-update-icon.svg'
 import styles from '../../styles/Profile-styles/ProfileUser.module.css'
 
-function ProfileUser({ user }) {
+function ProfileUser({ userPicture }) {
   // get the modal ref
   const imageModalRef = useRef()
   // change photo handler
@@ -16,13 +16,13 @@ function ProfileUser({ user }) {
   return (
     <div className={styles.Profile__imgContainer}>
       <img
-        src={user.picture || defaultPicture}
-        alt="profile user icon"
+        src={userPicture || defaultPicture}
+        alt="profile icon"
         className={`${styles.Profile__icons} ${styles.Profile__picture}`}
       />
       <ProfileButton
         imgSrc={updateIcon}
-        altText="profile user update icon"
+        altText="profile update icon"
         styling={styles.Profile__editPicture}
         onClick={() => imageModalRef.current.showModal()}
       />
@@ -30,7 +30,7 @@ function ProfileUser({ user }) {
       <ImageModal
         ref={imageModalRef}
         title="Update Your Profile Picture"
-        defaultPicture={user.picture || defaultPicture}
+        defaultPicture={userPicture || defaultPicture}
         imageAlt="user picture"
         formHandler={handleChangePhoto}
         confirmButtonText="save"

@@ -1,5 +1,9 @@
 import { forwardRef } from 'react'
 import { useSelector } from 'react-redux'
+import {
+  selectCurrentUsername,
+  selectCurrentPicture,
+} from '../../reducers/authReducer'
 import styles from '../../styles/ChatRoom-styles/Messages.module.css'
 import MessageHead from '../message_head/MessageHead'
 import MessageBody from '../message_body/MessageBody'
@@ -10,8 +14,8 @@ const Message = forwardRef(({
   time,
   currentFriend,
 }, ref) => {
-  const userState = useSelector(({ user }) => user)
-  const { username, picture } = userState
+  const username = useSelector(selectCurrentUsername)
+  const { picture } = useSelector(selectCurrentPicture)
 
   const isFriendMessage = senderId === currentFriend.id
 

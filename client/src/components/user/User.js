@@ -1,15 +1,20 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
+import {
+  selectCurrentUsername,
+  selectCurrentPicture,
+  resetCredentials,
+} from '../../reducers/authReducer'
 import styles from '../../styles/User.module.css'
 import { ReactComponent as UserIcon } from '../../icons/profile/profile-user-icon.svg'
 import { ReactComponent as LogoutIcon } from '../../icons/profile/profile-logout-icon.svg'
-import defaultPicture from '../../icons/default-user-profile-image.png'
-import { logout } from '../../store/features/users/usersSlice'
+import { useLogoutMutation } from '../../reducers/api/authApiSlice'
 
 function User() {
-  const userState = useSelector(({ user }) => user)
-  const { username, picture } = userState
+  const username = useSelector(selectCurrentUsername)
+  const { picture } = useSelector(selectCurrentPicture)
+  const [logout] = useLogoutMutation()
   const userRef = useRef()
   const dispatch = useDispatch()
 
@@ -17,8 +22,9 @@ function User() {
     userRef.current.classList.toggle('open')
   }
 
-  const handleLogout = () => {
-    dispatch(logout())
+  const handleLogout = async () => {
+    await logout()
+    dispatch(resetCredentials())
   }
 
   return (
@@ -33,7 +39,7 @@ function User() {
         onKeyDown={handleUserClick}
         tabIndex={0}
       >
-        <img src={picture || defaultPicture} alt={username} />
+        <img src={picture} alt={username} />
       </div>
 
       <div className={styles.user__dropdown}>
@@ -41,7 +47,7 @@ function User() {
         <div className={styles.user__links}>
           <Link
             className={styles.user__link}
-            to="profile"
+            to="/profile"
           >
             <UserIcon className={styles['user__link-icon']} />
             My Profile
