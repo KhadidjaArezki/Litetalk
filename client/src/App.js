@@ -15,9 +15,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="signup" element={<Signup />} />
-          <Route path="search" element={<Search />} />
           {/* Protected Routes */}
           <Route element={<RequireAuth />}>
+            <Route path="search" element={<Search />} />
             <Route exact path="/" element={<Chats />} />
             <Route exact path="chats" element={<Chats />} />
             <Route exact path="chatroom" element={<ChatRoom />} />
