@@ -47,7 +47,6 @@ export const imgToDataUrl = (content) => {
   /* hold the data necessary to create our image url    */
   let image = ''
   let contentType = ''
-
   /* In case of a url string, no further processing is required */
   if (typeof content.data === 'string') {
     image = content.data
@@ -57,11 +56,11 @@ export const imgToDataUrl = (content) => {
 
     /* The input for bufferFromArray differs depending on    */
     /* whether content.data is a byte array or an ArrayBuffer */
-    const getBuffer = (isArrayBuffer) => (
-      isArrayBuffer
-        ? bufferFromData(content)
-        : bufferFromData(content.data.data)
-    )
+    const getBuffer = (isArrayBuffer) => {
+      if (isArrayBuffer) return bufferFromData(content)
+      if (content.data) return bufferFromData(content.data.data)
+      return bufferFromData(content.replace(/^data:image\/\w+;base64/, ''))
+    }
 
     /* In case content.data is an ArrayBuffer, contentType is not available */
     /* and must be detected manually, here using the imageType package      */
