@@ -66,7 +66,8 @@ const postUserController = async (req, res) => {
 
 /* Controller to update user profile */
 const putUserController = async (req, res) => {
-  const user = await User.findById(req.params.id)
+  const { id } = req.params
+  const user = await User.findById(id)
   if (!user) {
     return res.status(404).end()
   }
@@ -88,7 +89,8 @@ const putUserController = async (req, res) => {
     })
   }
 
-  let { username, email, friends } = req.body
+  const { username, email } = req.body
+  let friends = JSON.parse(req.body.friends)
 
   /* picture can be null or an array of bytes */
   const picture = req.body.picture === null
