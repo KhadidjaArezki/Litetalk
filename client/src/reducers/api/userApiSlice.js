@@ -8,13 +8,18 @@ export const userApiSlice = apiSlice.injectEndpoints({
     updateUser: builder.mutation({
       query: ({
         id, username, email, picture, friends,
-      }) => ({
-        url: `${USER_URI}/${id}`,
-        method: 'PUT',
-        body: {
-          username, email, picture, friends,
-        },
-      }),
+      }) => {
+        const body = new FormData()
+        body.append('username', username)
+        body.append('email', email)
+        body.append('picture', picture)
+        body.append('friends', JSON.stringify(friends))
+        return {
+          url: `${USER_URI}/${id}`,
+          method: 'PUT',
+          body,
+        }
+      },
     }),
     removeUser: builder.mutation({
       query: (id) => ({
