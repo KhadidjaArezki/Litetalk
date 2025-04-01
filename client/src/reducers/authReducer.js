@@ -6,6 +6,9 @@ import {
   resetCookie,
   getCookieValue,
 } from '../utils/cookieParser'
+import { imgToDataUrl } from '../utils/helper'
+
+const cookieLifeInHours = process.env.REACT_APP_COOKIE_LIFE_IN_HOURS
 
 const storedUserData = () => {
   const storedId = getCookieValue(0)
@@ -49,12 +52,12 @@ const authSlice = createSlice({
         ? picture
         : {
           isDefault: !picture,
-          picture: picture ?? defaultPicture,
+          file: picture ?? null,
+          picture: picture ? imgToDataUrl(picture) : defaultPicture,
         }
       state.friends = friends
       state.token = token
       state.isOnline = true
-      const cookieLifeInHours = process.env.REACT_APP_COOKIE_LIFE_IN_HOURS
       createCookieInHour('id', id, cookieLifeInHours)
       createCookieInHour('username', username, cookieLifeInHours)
       createCookieInHour('email', email, cookieLifeInHours)
@@ -91,14 +94,29 @@ const authSlice = createSlice({
       localStorage.setItem('friends', JSON.stringify(newFriends))
     },
     updateProfile: (state, action) => {
-      state.username = action.payload.username
-      state.email = action.payload.email
-      state.token = action.paylod.token
+      const {
+        username, email, picture,
+      } = action.payload
+      state.username = username
+      state.email = email
+      state.picture = {
+        isDefault: !picture,
+        file: picture ?? null,
+        picture: picture ? imgToDataUrl(picture) : defaultPicture,
+      }
+      document.cookie.split(';').forEach((c) => {
+        document.cookie = resetCookie(c)
+      })
+      createCookieInHour('id', state.id, cookieLifeInHours)
+      createCookieInHour('username', username, cookieLifeInHours)
+      createCookieInHour('email', email, cookieLifeInHours)
+      createCookieInHour('token', state.token, cookieLifeInHours)
+      localStorage.setItem('user_profile_picture', JSON.stringify(state.picture))
     },
   },
 })
 export const {
-  setCredentials, resetCredentials, appendFriend, removeFriend,
+  setCredentials, resetCredentials, appendFriend, removeFriend, updateProfile,
 } = authSlice.actions
 export default authSlice.reducer
 
