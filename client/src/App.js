@@ -17,13 +17,13 @@ function App() {
           <Route path="signup" element={<Signup />} />
           {/* Protected Routes */}
           <Route element={<RequireAuth />}>
-            <Route path="search" element={<Search />} />
             <Route exact path="/" element={<Chats />} />
             <Route exact path="chats" element={<Chats />} />
             <Route exact path="chatroom" element={<ChatRoom />} />
             <Route exact path="profile" element={<Profile />} />
             <Route exact path="edit" element={<EditProfilePage />} />
             <Route exact path="friends" element={<Friends />} />
+            <Route exact path="search" element={<Search />} />
           </Route>
         </Routes>
       </Router>
