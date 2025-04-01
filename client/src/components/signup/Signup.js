@@ -8,6 +8,7 @@ import Illustration from '../../icons/signup/signup-illustration.png'
 import ChoiceButton from '../button/ChoiceButton'
 import SignupForm from './SignupForm'
 import styles from '../../styles/Signup-styles/Signup.module.css'
+import { imgToDataUrl } from '../../utils/helper'
 
 function Signup() {
   /* Set up formChoice variable to control status of the currently clicked
@@ -32,7 +33,18 @@ function Signup() {
   const onValidatedSubmit = async ({ username, email, password }) => {
     if (formChoice === 'login') {
       const userData = await login({ username, password }).unwrap()
-      dispatch(setCredentials({ ...userData }))
+      const picture = userData.picture ?? null
+      const friends = userData.friends.map((friend) => ({
+        ...friend,
+        picture: friend.picture
+          ? imgToDataUrl(friend.picture)
+          : null,
+      }))
+      dispatch(setCredentials({
+        ...userData,
+        picture,
+        friends,
+      }))
     }
     if (formChoice === 'signup') {
       const userData = await signup({ username, email, password }).unwrap()
