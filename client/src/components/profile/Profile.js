@@ -24,7 +24,7 @@ function Profile() {
   const email = useSelector(selectCurrentEmail)
   const { picture } = useSelector(selectCurrentPicture)
 
-  const removeUser = useRemoveUserMutation()
+  const [removeUser] = useRemoveUserMutation()
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -58,7 +58,7 @@ function Profile() {
       {/* main section of the profile page contains the profile
       picture, the icon to edit it, and profile form controls */}
       <main className={styles.Profile__main}>
-        <ProfileUser userPicture={picture} />
+        <ProfileUser />
         <ProfileForm username={username} email={email} disable="yes" />
       </main>
 
