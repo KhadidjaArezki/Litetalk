@@ -25,7 +25,7 @@ function LatestChats({ onOpenAChatClick }) {
       const messages = await getAllMessages({ id }).unwrap()
       dispatch(setMessages(messages))
     })()
-  }, [])
+  }, [friends])
 
   useEffect(() => {
     (async () => {
