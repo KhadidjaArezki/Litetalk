@@ -1,10 +1,13 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { selectCurrentFriends } from '../../reducers/authReducer'
+import { setCurrentFriendId } from '../../reducers/messageReducer'
 import styles from '../../styles/SearchResults.module.css'
+import btnStyles from '../../styles/Button.module.css'
 import AddFriendButton from '../button/AddFriendButton'
 import UnfriendButton from '../button/UnfriendButton'
-import FriendTag from '../friend_tag/FriendTag'
+import StartAChatButton from '../button/StartAChatButton'
 import Modal from '../modal/Modal'
 import defaultPicture from '../../icons/default-user-profile-image.png'
 
@@ -18,14 +21,27 @@ function SearchResult({
   formHandler,
 }) {
   const friends = useSelector(selectCurrentFriends)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const modalRef = useRef()
+  const searchResultContainer = container === 'people'
+    ? 'search-result'
+    : 'search-result--friends'
 
   const showButton = () => {
+    const friend = friends.find((f) => f.id === result.id)
     if (container === 'people') {
-      const friend = friends.find((f) => f.id === result.id)
-
       if (friend) {
-        return <FriendTag />
+        return (
+          <StartAChatButton
+            handleOnClick={() => {
+              dispatch(setCurrentFriendId(friend.id))
+              navigate('/chatroom')
+            }}
+            btnText=""
+            btnStyles={btnStyles['button--start-a-chat-in-search']}
+          />
+        )
       }
       return (
         <AddFriendButton
@@ -34,14 +50,24 @@ function SearchResult({
       )
     }
     return (
-      <UnfriendButton
-        handleUnfriendClick={() => modalRef.current.showModal()}
-      />
+      <>
+        <UnfriendButton
+          handleUnfriendClick={() => modalRef.current.showModal()}
+        />
+        <StartAChatButton
+          handleOnClick={() => {
+            dispatch(setCurrentFriendId(friend.id))
+            navigate('/chatroom')
+          }}
+          btnText=""
+          btnStyles={btnStyles['button--start-a-chat--friends']}
+        />
+      </>
     )
   }
 
   return (
-    <div className={styles['search-result']} data-id={result.id}>
+    <div className={styles[searchResultContainer]} data-id={result.id}>
       <div className={styles['search-result__description']}>
         <div className={styles['search-result__image']}>
           <img src={result.picture || defaultPicture} alt={result.username} />
@@ -50,7 +76,9 @@ function SearchResult({
           <p>{result.username}</p>
         </div>
       </div>
-      {showButton()}
+      <div className={styles['search-result__buttons']}>
+        {showButton()}
+      </div>
 
       <Modal
         ref={modalRef}
