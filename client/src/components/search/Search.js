@@ -10,19 +10,19 @@ import {
 } from '../../reducers/authReducer'
 import SearchBox from '../searchbox/SearchBox'
 import SearchResults from '../search_results/SearchResults'
-import Navbar from '../navbar/Navbar'
-import Footer from '../footer/Footer'
 import { useUpdateUserMutation } from '../../reducers/api/userApiSlice'
-import peopleService from '../../services/people'
+import { useSearchMutation } from '../../reducers/api/peopleApiSlice'
+import { imgToDataUrl } from '../../utils/helper'
 
 function Search() {
   const id = useSelector(selectCurrentId)
   const username = useSelector(selectCurrentUsername)
   const email = useSelector(selectCurrentEmail)
-  const { isDefault, picture } = useSelector(selectCurrentPicture)
+  const { isDefault, file } = useSelector(selectCurrentPicture)
   const friends = useSelector(selectCurrentFriends)
 
   const [updateUser] = useUpdateUserMutation()
+  const [search] = useSearchMutation()
 
   const dispatch = useDispatch()
 
@@ -32,10 +32,17 @@ function Search() {
   const handleSearch = async (event) => {
     event.preventDefault()
     const searchKeywords = event.target.search.value
-    const results = await peopleService.search({
+    const results = await search({
       searchKeywords,
-    })
-    setCurrentResults(results.filter((user) => user.username !== username))
+    }).unwrap()
+    setCurrentResults(results
+      .filter((user) => user.username !== username)
+      .map((user) => ({
+        ...user,
+        picture: user.picture
+          ? imgToDataUrl(user.picture)
+          : null,
+      })))
   }
 
   const handleAdd = async (personId) => {
@@ -43,7 +50,10 @@ function Search() {
       id,
       username,
       email,
-      picture: isDefault ? null : picture,
+      picture: isDefault ? null : new File(
+        [file],
+        `${username}.${file.contentType.substring(file.contentType.indexOf('/') + 1)}`,
+      ),
       friends: friends.map((friend) => friend.id).concat(personId),
     }).unwrap()
     const updatedFriends = updatedUser.friends
@@ -52,25 +62,24 @@ function Search() {
     const newFriend = updatedFriends.find(
       (friend) => !friends.some((f) => f.id === friend.id),
     )
-    dispatch(appendFriend(newFriend))
+    dispatch(appendFriend({
+      ...newFriend,
+      picture: imgToDataUrl(newFriend.picture),
+    }))
   }
 
   return (
-    <>
-      <Navbar />
-      <div id="search" className="container main">
-        <SearchBox searchHandler={handleSearch} container={container} />
-        <SearchResults
-          results={currentResults}
-          container={container}
-          modalTitle="Confirm Friend Request"
-          getModalText={(name) => `Are you sure you want to add ${name} to your friends list ?`}
-          confirmButtonText="Add"
-          formHandler={handleAdd}
-        />
-      </div>
-      <Footer />
-    </>
+    <div id="search" className="container main">
+      <SearchBox searchHandler={handleSearch} container={container} />
+      <SearchResults
+        results={currentResults}
+        container={container}
+        modalTitle="Confirm Friend Request"
+        getModalText={(name) => `Are you sure you want to add ${name} to your friends list ?`}
+        confirmButtonText="Add"
+        formHandler={handleAdd}
+      />
+    </div>
   )
 }
 
