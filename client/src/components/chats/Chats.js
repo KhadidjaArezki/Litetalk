@@ -9,6 +9,7 @@ import { setCurrentFriendId } from '../../reducers/messageReducer'
 import StartAChatButton from '../button/StartAChatButton'
 import ModalStartAChat from '../modal/ModalStartAChat'
 import LatestChats from './LatestChats'
+import btnStyles from '../../styles/Button.module.css'
 
 function Chats() {
   // Get the current user state
@@ -31,7 +32,11 @@ function Chats() {
   if (friends?.length) {
     return (
       <div id="chats" className="container main">
-        <StartAChatButton handleOnClick={onOpenModal} />
+        <StartAChatButton
+          handleOnClick={onOpenModal}
+          btnText="Start a chat"
+          btnStyles={btnStyles['button--start-a-chat']}
+        />
         <ModalStartAChat
           friends={friends}
           ref={modalRef}
