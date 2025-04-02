@@ -23,8 +23,14 @@
     /* flex-shrink: 0; */
 }
 
+.friend__image img {
+  height: 5.6rem;
+  width: 5.6rem;
+}
+
 .friend__username{
     font-size: 18px;
     font-weight: 600;
     margin: 0 10px;
 }
+

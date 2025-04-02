@@ -5,22 +5,30 @@ import { useNavigate } from 'react-router-dom'
 import ProfileForm from './ProfileForm'
 import styles from '../../styles/Profile-styles/EditProfile.module.css'
 import Button from '../button/Button'
-import { selectCurrentEmail, selectCurrentUsername } from '../../reducers/authReducer'
+import {
+  selectCurrentId,
+  selectCurrentUsername,
+  selectCurrentEmail,
+  selectCurrentPicture,
+  selectCurrentFriends,
+} from '../../reducers/authReducer'
 
 function EditProfilePage() {
-  // select the user state from redux store
+  const id = useSelector(selectCurrentId)
   const username = useSelector(selectCurrentUsername)
   const email = useSelector(selectCurrentEmail)
+  const { picture } = useSelector(selectCurrentPicture)
+  const friends = useSelector(selectCurrentFriends).map((f) => f.id)
 
-  // use the navigation hook from react-router-dom
   const navigate = useNavigate()
 
-  // handle the changes saved by the user
-  const handleSave = () => {
-    // save the edit
+  const handleSave = (event) => {
+    // TODO: save the edit
+    event.preventDefault()
+    const newUsername = event.target.username.value
+    const newEmail = event.target.email.value
   }
 
-  // discard the changes not saved by user
   const handleCancel = () => {
     // cancel the edit and return back to profile
     navigate('/profile')

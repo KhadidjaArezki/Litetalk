@@ -34,8 +34,8 @@
 }
 
 .modal__close-button {
-    background: none;
-    color: var(--clr-dark-grey);
+  background: none;
+  color: var(--clr-dark-grey);
 	border: none;
 	padding: 0;
 	font: inherit;

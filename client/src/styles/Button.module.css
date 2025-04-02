@@ -17,6 +17,7 @@
 }
 
 .button--add-friend {
+  padding: 20px 20px;
   background-color: var(--clr-royal-blue);
   color: var(--clr-pampas-pink);
 }
@@ -35,6 +36,7 @@
 }
 
 .button--unfriend {
+  padding: 20px 20px;
   color: var(--clr-danger-red);
   background-color: transparent;
   border: 1px solid var(--clr-danger-red);
@@ -80,9 +82,24 @@
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
   font-size: 26px;
   font-family: var(--ff-text);
-  /* For some reason font-weight: 400, the same as on figma is too bold in browser.
-     That's why I had to lower it to 300 to achieve the same effect as in figma*/
   font-weight: 300;
+}
+
+.button--start-a-chat-in-search, .button--start-a-chat--friends {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  width: 60px;
+  padding: 0px;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 0;
+  bottom: 80px;
+  right: 15px;
+  background-color: var(--clr-royal-blue);
+  color: var(--clr-pampas-pink);
+  text-transform: none;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
 }
 
 .button--choice {
@@ -117,6 +134,13 @@
     filter: brightness(95%);
 }
 
+@media(min-width: 500px) {
+  .button--signup-form-submit {
+    font-size: 26px;
+    margin-top: 30px;
+  }
+}
+
 @media(max-width:668px) {
   .button {
     font-size: 14px;
@@ -140,6 +164,31 @@
   .button--signup-form-submit {
     margin: 20px 0px 0px 0px;
   }
+  
+  .button--unfriend {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0 0;
+    padding-top: 10px;
+    margin: 0;
+  }
+  
+  .button--start-a-chat--friends {
+    position: relative;
+    top: -60px;
+    margin: 0;
+  }
+  
+  .button--start-a-chat-in-search, .button--start-a-chat--friends {
+    box-shadow: none;
+    height: 45px;
+    width: 45px;
+  }
+  .button--start-a-chat-in-search img, .button--start-a-chat--friends img {
+    width: 30px;
+    height: 30px;
+  }
 }
 
 @media(max-width:768px) {
@@ -160,15 +209,16 @@
     border-radius: 50%;
     position: fixed;
     margin-bottom: 0;
-    /* I put it little bit further from the edge (compared to figma design) to not cover the footer */
     bottom: 80px;
     right: 15px;
   }
-}
-
-@media(min-width: 500px) {
-  .button--signup-form-submit {
-    font-size: 26px;
-    margin-top: 30px;
+  
+  .button--add-friend {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0 0;
+    margin-top: 20px;
+    color: var(--clr-royal-blue);
   }
 }

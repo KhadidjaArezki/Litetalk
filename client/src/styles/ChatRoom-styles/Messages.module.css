@@ -98,6 +98,9 @@
 
 .message__head img {
   object-fit: cover;
+  object-position: center;
+  height: 6rem;
+  width: 6rem;
 }
 
 .message__head--user .message__head__img {
@@ -168,6 +171,11 @@
   .message__head__img {
     width: 32px !important;
     height: 32px !important;
+  }
+  
+  .message__head__img img {
+    max-width: 28px;
+    max-height: 28px;
   }
 
   .message__head__text {

@@ -74,6 +74,9 @@ button.user__link {
 }
 .user img {
   object-fit: cover;
+  object-position: center;
+  width: 4.4rem;
+  height: 4.4rem;
 }
 
 @media (max-width: 768px) { 

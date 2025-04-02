@@ -48,7 +48,7 @@
   border: none;
   border-radius: 50%;
   object-fit: cover;
-  object-position: 0 0;
+  object-position: center;
   margin: 2rem 0;
   height: 15rem;
   width: 15rem;

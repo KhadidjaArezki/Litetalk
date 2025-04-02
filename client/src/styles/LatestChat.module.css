@@ -26,6 +26,13 @@
     flex-shrink: 0;
 }
 
+.latest-chat__image img {
+    object-fit: cover;
+    object-position: center;
+    height: 6.5rem;
+    width: 6.5rem;
+}
+
 .latest-chat__username {
     font-size: 21.47px;
     font-weight: 600;
@@ -70,6 +77,11 @@
     .latest-chat__image {
         height: 46px;
         width: 46px;
+    }
+    
+    .latest-chat__image img {
+      max-height: 4.2rem;
+      max-width: 4.2rem;
     }
 
     .latest-chat__username, 
