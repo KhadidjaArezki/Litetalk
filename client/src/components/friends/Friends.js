@@ -16,7 +16,7 @@ function Friends() {
   const id = useSelector(selectCurrentId)
   const username = useSelector(selectCurrentUsername)
   const email = useSelector(selectCurrentEmail)
-  const { isDefault, picture } = useSelector(selectCurrentPicture)
+  const { isDefault, file } = useSelector(selectCurrentPicture)
   const friends = useSelector(selectCurrentFriends)
 
   const [updateUser] = useUpdateUserMutation()
@@ -67,7 +67,10 @@ function Friends() {
       id,
       username,
       email,
-      picture: isDefault ? null : picture,
+      picture: isDefault ? null : new File(
+        [file],
+        `${username}.${file.contentType.substring(file.contentType.indexOf('/') + 1)}`,
+      ),
       friends: getNewFriends(),
     }).unwrap()
     const updatedFriends = updatedUser.friends

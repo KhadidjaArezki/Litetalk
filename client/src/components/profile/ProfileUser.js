@@ -1,22 +1,48 @@
 import { useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useUpdateUserMutation } from '../../reducers/api/userApiSlice'
+import {
+  selectCurrentId,
+  selectCurrentUsername,
+  selectCurrentEmail,
+  selectCurrentPicture,
+  selectCurrentFriends,
+  updateProfile,
+} from '../../reducers/authReducer'
 import ImageModal from '../modal/ImageModal'
 import ProfileButton from './ProfileButton'
 import defaultPicture from '../../icons/default-user-profile-image.png'
 import updateIcon from '../../icons/profile/profile-picture-update-icon.svg'
 import styles from '../../styles/Profile-styles/ProfileUser.module.css'
 
-function ProfileUser({ userPicture }) {
-  // get the modal ref
+function ProfileUser() {
+  const id = useSelector(selectCurrentId)
+  const username = useSelector(selectCurrentUsername)
+  const email = useSelector(selectCurrentEmail)
+  const { picture } = useSelector(selectCurrentPicture)
+  const friends = useSelector(selectCurrentFriends)
+  const [updateUser] = useUpdateUserMutation()
+  const dispatch = useDispatch()
   const imageModalRef = useRef()
-  // change photo handler
-  const handleChangePhoto = () => {
-    // do something
+  const handleChangePhoto = async (imageFile) => {
+    const updatedUser = await updateUser({
+      id,
+      username,
+      email,
+      friends: friends.map((f) => f.id),
+      picture: imageFile,
+    }).unwrap()
+    const userPicture = updatedUser.picture ?? null
+    dispatch(updateProfile({
+      ...updatedUser,
+      picture: userPicture,
+    }))
   }
 
   return (
     <div className={styles.Profile__imgContainer}>
       <img
-        src={userPicture || defaultPicture}
+        src={picture ?? defaultPicture}
         alt="profile icon"
         className={`${styles.Profile__icons} ${styles.Profile__picture}`}
       />
@@ -30,7 +56,7 @@ function ProfileUser({ userPicture }) {
       <ImageModal
         ref={imageModalRef}
         title="Update Your Profile Picture"
-        defaultPicture={userPicture || defaultPicture}
+        defaultPicture={picture ?? defaultPicture}
         imageAlt="user picture"
         formHandler={handleChangePhoto}
         confirmButtonText="save"
