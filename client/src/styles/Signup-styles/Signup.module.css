@@ -54,15 +54,17 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 10px 26px;
-         gap: 10px;
+        padding: 20px 50px;
+        gap: 10px;
+        min-width: min(60%, 1200px);        
     }
     .Signup__side__illustration {
         width: 90%;
     }
 /* ------------- Main section ------------ */
     .Signup__main {
-        min-width: min(41%, 618px);
+        min-width: min(40%, 1000px);
+        padding: 20px 50px;
     }
     .Signup__main__logo-container {
         display: none;
