@@ -52,7 +52,7 @@ const postUserController = async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "None",
-    maxAge: 12 * 60 * 60 * 1000,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
   })
   res.status(201).json({
     id: updatedUser.id,
@@ -93,12 +93,12 @@ const putUserController = async (req, res) => {
   let friends = JSON.parse(req.body.friends)
 
   /* picture can be null or an array of bytes */
-  const picture = req.body.picture === null
+  const picture = req.body.picture === "null"
     ? null
     : {
-    data: new Buffer.from(req.file.buffer, 'base64'),
-    contentType: req.file.mimetype
-  }
+      data: new Buffer.from(req.file.buffer, 'base64'),
+      contentType: req.file.mimetype
+    }
   // remove duplicate friends and prevent user from befriending themselves
   friends = [...new Set(friends)].filter(f => f != user.id)
   const userToUpdate = {
@@ -156,7 +156,16 @@ const deleteUserController = async (req, res) => {
   }
 
   await User.findByIdAndRemove(req.params.id)
-  res.status(200)
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    sameSite: "None",
+    secure: true,
+  })
+  
+  res.status(200).json({
+    success: true,
+    message: "user deleted"
+  })
 }
 
 module.exports={
