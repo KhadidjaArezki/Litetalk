@@ -1,13 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../../reducers/authReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import { useLoginMutation, useSignupMutation } from '../../reducers/api/authApiSlice'
 import Logo from '../logo/Logo'
 import Illustration from '../../icons/signup/signup-illustration.png'
 import ChoiceButton from '../button/ChoiceButton'
 import SignupForm from './SignupForm'
 import styles from '../../styles/Signup-styles/Signup.module.css'
+import { saveProfilePictureToDB } from '../../reducers/thunk/authThunks'
 import { imgToDataUrl } from '../../utils/helper'
 
 function Signup() {
@@ -15,10 +17,24 @@ function Signup() {
    * form option which sets the Login Mode or the Signup Mode
    */
   const [formChoice, setFormChoice] = useState('signup')
+  const [errMsg, setErrMsg] = useState('')
   const [login] = useLoginMutation()
   const [signup] = useSignupMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (errMsg) {
+      dispatch(setNotification(
+        {
+          message: errMsg,
+          type: 'error',
+        },
+        5,
+      ))
+      setErrMsg('')
+    }
+  }, [errMsg])
 
   /* Create function that handles the choices click and
    * udates the state formChoice variable accordingly
@@ -32,25 +48,55 @@ function Signup() {
    */
   const onValidatedSubmit = async ({ username, email, password }) => {
     if (formChoice === 'login') {
-      const userData = await login({ username, password }).unwrap()
-      const picture = userData.picture ?? null
-      const friends = userData.friends.map((friend) => ({
-        ...friend,
-        picture: friend.picture
-          ? imgToDataUrl(friend.picture)
-          : null,
-      }))
-      dispatch(setCredentials({
-        ...userData,
-        picture,
-        friends,
-      }))
+      const data = await login({ username, password })
+      if (data.error?.status === 401 || data.error?.status === 403) {
+        setErrMsg('Invalid Credentials.')
+      } else {
+        try {
+          const userData = data.data
+          const picture = userData.picture ?? null
+          const friends = userData.friends.map((friend) => ({
+            ...friend,
+            picture: friend.picture
+              ? imgToDataUrl(friend.picture)
+              : null,
+          }))
+          dispatch(saveProfilePictureToDB(picture))
+          dispatch(setCredentials({
+            ...userData,
+            picture,
+            friends,
+          }))
+          navigate('/')
+        } catch (error) {
+          if (error.status === 400) {
+            setErrMsg('Missing Username or password')
+          } else if (error.status === 500) {
+            setErrMsg('Login failed')
+          } else {
+            setErrMsg(error.data?.error ?? error.error)
+          }
+        }
+      }
     }
     if (formChoice === 'signup') {
-      const userData = await signup({ username, email, password }).unwrap()
-      dispatch(setCredentials({ ...userData }))
+      try {
+        const userData = await signup({ username, email, password }).unwrap()
+        dispatch(setCredentials({ ...userData }))
+        navigate('/')
+      } catch (error) {
+        console.log(`error message: ${error.data?.error}`)
+        if (error.status === 409) {
+          setErrMsg(`${error.data?.error ?? error.error}`)
+        } else if (error.status === 400) {
+          setErrMsg('Missing Username or password')
+        } else if (error.status === 500) {
+          setErrMsg('Signup failed')
+        } else {
+          setErrMsg(error.data?.error ?? error.error)
+        }
+      }
     }
-    navigate('/')
   }
 
   return (
