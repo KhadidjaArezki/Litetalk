@@ -19,16 +19,21 @@ const getTokenController = async (req, res) => {
     sameSite: "None",
     secure: true,
   })
+  
+  console.log(`Refresh Token: ${oldRefreshToken}`)
 
   // Calling exec is not neccessary, but helps with debugging
   const foundUser = await User.findOne({ refreshToken: oldRefreshToken }).exec()
+  console.log(`found user: ${foundUser?.refreshToken}`)
 
   jwt.verify(oldRefreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
+    //console.log('Verifiying Refresh Token')
     if (err?.name === "JsonWebTokenError") {
       return res.status(401).json({
         error: "Refresh token missing or invalid",
       })
     }
+    //console.log('No JsonWebTokenError')
     // Detected refresh token reuse!
     if (!foundUser) {
       const hackedUser = await User.findOne({
@@ -39,7 +44,8 @@ const getTokenController = async (req, res) => {
       await hackedUser.save()
       return res.sendStatus(403) //Forbidden
     }
-
+    //console.log('User was not hacked')
+    
     // Remove old rt token from user rt array
     const newRefreshTokenArray = foundUser.refreshToken.filter(
       (rt) => rt !== oldRefreshToken
@@ -54,8 +60,9 @@ const getTokenController = async (req, res) => {
       })
     }
     // Check that rt corresponds to our user
-    if (foundUser.username !== decoded.username) return res.sendStatus(403)
-
+    if (foundUser.id !== decoded.id) return res.sendStatus(403)
+    
+    //console.log('user id OK')
     // All is good
     const { token, refreshToken } = generateAllTokens(foundUser)
     const userToUpdate = {
