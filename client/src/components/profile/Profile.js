@@ -6,7 +6,6 @@ import {
   selectCurrentId,
   selectCurrentUsername,
   selectCurrentEmail,
-  selectCurrentPicture,
   resetCredentials,
 } from '../../reducers/authReducer'
 import { useRemoveUserMutation } from '../../reducers/api/userApiSlice'
@@ -17,12 +16,12 @@ import Modal from '../modal/Modal'
 import editIcon from '../../icons/profile/profile-edit-icon.svg'
 import deleteIcon from '../../icons/profile/profile-delete-icon.svg'
 import styles from '../../styles/Profile-styles/Profile.module.css'
+import { saveProfilePictureToDB } from '../../reducers/thunk/authThunks'
 
 function Profile() {
   const id = useSelector(selectCurrentId)
   const username = useSelector(selectCurrentUsername)
   const email = useSelector(selectCurrentEmail)
-  const { picture } = useSelector(selectCurrentPicture)
 
   const [removeUser] = useRemoveUserMutation()
 
@@ -33,8 +32,9 @@ function Profile() {
 
   const handleDeleteProfile = async () => {
     await removeUser(id)
+    dispatch(saveProfilePictureToDB(null))
     dispatch(resetCredentials())
-    navigate('/')
+    navigate('/signup')
   }
 
   return (

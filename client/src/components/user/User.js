@@ -10,6 +10,7 @@ import styles from '../../styles/User.module.css'
 import { ReactComponent as UserIcon } from '../../icons/profile/profile-user-icon.svg'
 import { ReactComponent as LogoutIcon } from '../../icons/profile/profile-logout-icon.svg'
 import { useLogoutMutation } from '../../reducers/api/authApiSlice'
+import { saveProfilePictureToDB } from '../../reducers/thunk/authThunks'
 
 function User() {
   const username = useSelector(selectCurrentUsername)
@@ -24,6 +25,7 @@ function User() {
 
   const handleLogout = async () => {
     await logout()
+    dispatch(saveProfilePictureToDB(null))
     dispatch(resetCredentials())
   }
 

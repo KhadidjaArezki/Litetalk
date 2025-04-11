@@ -14,6 +14,7 @@ import ProfileButton from './ProfileButton'
 import defaultPicture from '../../icons/default-user-profile-image.png'
 import updateIcon from '../../icons/profile/profile-picture-update-icon.svg'
 import styles from '../../styles/Profile-styles/ProfileUser.module.css'
+import { saveProfilePictureToDB } from '../../reducers/thunk/authThunks'
 
 function ProfileUser() {
   const id = useSelector(selectCurrentId)
@@ -24,6 +25,7 @@ function ProfileUser() {
   const [updateUser] = useUpdateUserMutation()
   const dispatch = useDispatch()
   const imageModalRef = useRef()
+
   const handleChangePhoto = async (imageFile) => {
     const updatedUser = await updateUser({
       id,
@@ -33,6 +35,7 @@ function ProfileUser() {
       picture: imageFile,
     }).unwrap()
     const userPicture = updatedUser.picture ?? null
+    dispatch(saveProfilePictureToDB(userPicture))
     dispatch(updateProfile({
       ...updatedUser,
       picture: userPicture,
