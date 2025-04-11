@@ -24,7 +24,9 @@ function Messages() {
 
   /* Auto scroll to bottom on each successfully-added message */
   useEffect(() => {
-    scrollRef.current?.scrollIntoView(false, { behavior: 'smooth' })
+    (async () => {
+      scrollRef.current?.scrollIntoView(false, { behavior: 'smooth' })
+    })()
   }, [chats])
 
   return (

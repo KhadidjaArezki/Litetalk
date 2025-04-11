@@ -26,14 +26,21 @@ export const messagesSlice = createSlice({
       /* If a chat's friendId is not equal to the current friend id, */
       /* return chat, else return a new chat object that contains    */
       /* an updated messages array with the new message.             */
-      state.chats = state.chats.map((chat) => (
-        chat.friendId !== state.currentFriendId
-          ? chat
-          : {
-            ...chat,
-            messages: chat.messages.concat(action.payload),
-          }
-      ))
+      if (state.chats.length === 0) {
+        state.chats = [{
+          friendId: state.currentFriendId,
+          messages: [action.payload],
+        }]
+      } else {
+        state.chats = state.chats.map((chat) => (
+          chat.friendId !== state.currentFriendId
+            ? chat
+            : {
+              ...chat,
+              messages: chat.messages.concat(action.payload),
+            }
+        ))
+      }
       localStorage.setItem('chats', JSON.stringify(state.chats))
     },
   },

@@ -25,10 +25,12 @@ function MessageForms() {
     /* Dispatch an addUser event to add current user   */
     /* to the users connected to the socket server now */
     socket.emit('addUser', userId)
-    /* Add a function to handle the 'getUsers' event received from the socket sever */
+    /* Add a function to handle the 'getUsers' event received from the socket sever
+     * This does nothing. It's for testing purposes and can be removed
     socket.on('getUsers', (users) => {
       console.log(users)
     })
+    */
   }, [])
 
   /* Dispatch a 'sendMessage' event to send message to socket server */

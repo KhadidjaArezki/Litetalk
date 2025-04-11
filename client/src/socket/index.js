@@ -8,10 +8,12 @@ export function initializeSocket(store) {
   const currentFriendId = useSelector(selectCurrentFriendId)
   /* Create the socket client */
   const socket = io(process.env.REACT_APP_SOCKET_URL)
-  // handle connection event sent from server
+  /* handle connection event sent from server
+   * This does nothing. It's for testing purposes and can be removed
   socket.on('welcome', (message) => {
     console.log(message)
   })
+  */
   /* Add a function to handle the 'getMessage' event received from socket server */
   socket.on('getMessage', ({ senderId, message, timestamp }) => (
     /* Check to make sure that the received message was */

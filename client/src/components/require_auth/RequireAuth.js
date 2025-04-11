@@ -8,13 +8,16 @@ function RequireAuth() {
   const token = useSelector(selectCurrentToken)
   const location = useLocation()
 
-  return token ? (
-    <>
-      <Navbar />
-      <Outlet />
-      <Footer />
-    </>
-  ) : (
+  if (token) {
+    return (
+      <>
+        <Navbar />
+        <Outlet />
+        <Footer />
+      </>
+    )
+  }
+  return (
     <Navigate from={location.pathname} to="/signup" />
   )
 }

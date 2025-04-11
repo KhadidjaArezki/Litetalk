@@ -59,7 +59,8 @@ export const imgToDataUrl = (content) => {
     const getBuffer = (isArrayBuffer) => {
       if (isArrayBuffer) return bufferFromData(content)
       if (content.data) return bufferFromData(content.data.data)
-      return bufferFromData(content.replace(/^data:image\/\w+;base64/, ''))
+      return null
+      // return bufferFromData(content.replace(/^data:image\/\w+;base64/, ''))
     }
 
     /* In case content.data is an ArrayBuffer, contentType is not available */
