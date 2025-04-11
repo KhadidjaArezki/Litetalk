@@ -7,7 +7,6 @@
     "buildui": "rm -rf build && npm run build",
     "build": "cd client && npm build",
     "start": "cd server && npm start",
-    "install": "cd server && npm install"
    },
   "author": "v39-bears-team-11",
   "license": "MIT",
