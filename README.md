@@ -8,9 +8,9 @@
 <br>
 
 ## OVERVIEW 🔍🔍🔍
-Litetalk is a lightweight social media app for connecting with family and friends. You can chat, share media and make calls with family and friends for free. Litetalk uses less bandwidth so it supports 2G network areas pretty well.
+Litetalk is a lightweight social media app for connecting with family and friends. You can chat and share images for free.
 
-**Live link:** --- You can find the app [here](https://litetalk.herokuapp.com/)
+**Live link:** --- You can find the app [here](https://litetalk.onrender.com/)
 
 <br>
 
@@ -23,11 +23,11 @@ Litetalk is a lightweight social media app for connecting with family and friend
 ## FEATURES ✨✨✨
 The features of the `litetalk` app are -
 - create user account
-- chat with other users
-- share media files like photos and videos
-- send and receive messages in real time
+- update your profile
 - add contacts
-- and many more
+- chat with other users
+- share photos
+- send and receive messages in real time
 
 <br>
 
@@ -68,6 +68,6 @@ The list of dependencies used in the backend are :
     - Run `npm install`
     - `cd` into the backend folder
     - Run `npm install`
-    - Remain in the backend folder and run `npm run serve'
+    - Remain in the backend folder and run `npm run server'
 
 In the package.json file you will find the scripts for development and production. To be sure, for production build run `npm run build`.
