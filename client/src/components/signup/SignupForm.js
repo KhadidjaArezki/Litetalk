@@ -31,13 +31,13 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
     const fieldValidationErrors = {}
     const isValidUsername = inputValues.username.length >= 5
     const isValidEmail = (/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i).test(inputValues.email)
-    const isValidPassword = inputValues.password.length >= 5
+    const isValidPassword = inputValues.password.length >= 8
 
     // Based on the above validation assign the error message, or remove the error message
     // in the fieldValidationErrors variable.
     fieldValidationErrors.username = isValidUsername ? '' : 'minimum 5 characters'
     fieldValidationErrors.email = isValidEmail ? '' : 'invalid email address'
-    fieldValidationErrors.password = isValidPassword ? '' : 'minimum 5 characters'
+    fieldValidationErrors.password = isValidPassword ? '' : 'minimum 8 characters'
 
     // Assign the message status of errros (fieldValidationErrors) to the errors state variable.
     setErrors({ ...fieldValidationErrors })
@@ -77,8 +77,8 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
   return (
     <div className={styles.SignupForm__container}>
       <h4 className={styles.SignupForm__heading}>
-        {formChoice === 'login' && 'Login To Your Account'}
-        {formChoice === 'signup' && 'Create Your Account'}
+        {formChoice === 'login' && 'Login to your account'}
+        {formChoice === 'signup' && 'Create your account'}
       </h4>
       <form
         onSubmit={handleSubmit}
@@ -91,7 +91,7 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
             <SignupFormField
               type="text"
               name="email"
-              placeholder="Your Email"
+              placeholder="Your email"
               iconSrc={emailIcon}
               handleInput={handleInput}
               formChoice={formChoice}
@@ -103,7 +103,7 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
         <SignupFormField
           type="text"
           name="username"
-          placeholder="Your Name"
+          placeholder="Your name"
           iconSrc={userIcon}
           handleInput={handleInput}
           formChoice={formChoice}
