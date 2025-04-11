@@ -6,7 +6,7 @@
   "scripts": {
     "buildui": "rm -rf build && npm run build",
     "build": "cd client && npm build",
-    "start": "cd server && npm start",
+    "start": "cd server && npm start"
    },
   "author": "v39-bears-team-11",
   "license": "MIT",
