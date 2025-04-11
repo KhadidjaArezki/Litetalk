@@ -26,8 +26,16 @@ const UseCameraModal = forwardRef(({
   useEffect(() => {
     (async () => {
       if (isOpen) {
+        // When initializing the camera
+        const constraints = {
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            aspectRatio: 16 / 9, // common webcam ratio
+          },
+        }
         /* Requesting User Permission */
-        const currentStream = await navigator.mediaDevices.getUserMedia({ video: true })
+        const currentStream = await navigator.mediaDevices.getUserMedia(constraints)
         setStream(currentStream)
         video.srcObject = currentStream
       }
