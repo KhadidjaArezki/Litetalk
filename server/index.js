@@ -12,7 +12,7 @@ const io = require('socket.io')(server, {
   /* Limit message size to 2MB */
   maxHttpBufferSize: 2e6,
   cors: {
-    origin: '*',
+    origin: [PROD_SERVER_URL],
   },
 })
 

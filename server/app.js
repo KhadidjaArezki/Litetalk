@@ -40,7 +40,7 @@ const CLIENT_DEV_SERVER_URL = process.env.CLIENT_DEV_SERVER_URL
 const PROD_SERVER_URL = process.env.PROD_SERVER_URL
 
 const corsOption = {
-  origin: [CLIENT_DEV_SERVER_URL, PROD_SERVER_URL],
+  origin: [PROD_SERVER_URL],
   credentials: true,
 }
 app.use(cors(corsOption))
