@@ -9,7 +9,9 @@ import { setCurrentFriendId } from '../../reducers/messageReducer'
 import StartAChatButton from '../button/StartAChatButton'
 import ModalStartAChat from '../modal/ModalStartAChat'
 import LatestChats from './LatestChats'
+import Button from '../button/Button'
 import btnStyles from '../../styles/Button.module.css'
+import magnifyingGlass from '../../icons/searchbox/magnifying-glass.png'
 
 function Chats() {
   // Get the current user state
@@ -56,11 +58,18 @@ function Chats() {
         <span className="italic"> lite </span>
         steps...
       </h2>
-      <h4>...to tell your friends how much breathtaking they are!</h4>
-      <h5>
-        To look for your friends and add them to your contacts list
-        simply press the magnifying glass icon.
-      </h5>
+      <h4>...to connect and chat with your friends!</h4>
+      <br />
+      <h4>To look for your friends and add them to your contacts list</h4>
+      <h4>click the search button below</h4>
+      <h4>Your friends will get your messages after they add you</h4>
+      <Button
+        text="Start Search"
+        className={btnStyles['button--start-a-search']}
+        onClick={() => navigate('/search')}
+        icon={magnifyingGlass}
+        iconAlt="magnifying glass"
+      />
     </div>
   )
 }
