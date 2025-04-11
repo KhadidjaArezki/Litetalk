@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Notification from './components/notification/Notification'
 import Chats from './components/chats/Chats'
 import ChatRoom from './components/chatroom/ChatRoom'
 import Signup from './components/signup/Signup'
@@ -12,6 +13,7 @@ import RequireAuth from './components/require_auth/RequireAuth'
 function App() {
   return (
     <div className="App">
+      <Notification />
       <Router>
         <Routes>
           <Route path="signup" element={<Signup />} />
