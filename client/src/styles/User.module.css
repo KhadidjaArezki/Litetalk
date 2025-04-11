@@ -7,6 +7,7 @@
   border-radius: 50%;
   border: 2px solid var(--clr-royal-blue);
   overflow: hidden;
+  aspect-ratio: 16/9;
 }
 
 .user__dropdown {
@@ -75,8 +76,8 @@ button.user__link {
 .user img {
   object-fit: cover;
   object-position: center;
-  width: 4.4rem;
-  height: 4.4rem;
+  height: 100%;
+  width: 100%;
 }
 
 @media (max-width: 768px) { 

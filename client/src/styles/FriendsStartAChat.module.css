@@ -20,12 +20,15 @@
     border: 2.4714px solid var(--clr-royal-blue);
     border-radius: 50%;
     overflow: hidden;
-    /* flex-shrink: 0; */
+    flex-shrink: 0;
+    aspect-ratio: 16 / 9;
 }
 
 .friend__image img {
-  height: 5.6rem;
-  width: 5.6rem;
+  object-fit: cover;
+  object-position: center;
+  height: 100%;
+  width: 100%;
 }
 
 .friend__username{

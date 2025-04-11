@@ -13,13 +13,14 @@
   border: 2px solid var(--clr-royal-blue);
   margin: 0 auto;
   overflow: hidden;
+  aspect-ratio: 16 / 9;
 }
 
 .search-result__image img {
   object-fit: cover;
   object-position: center;
-  height: 8rem;
-  width: 8rem;
+  height: 100%;
+  width: 100%;
 }
 
 .search-result__text {
@@ -35,10 +36,13 @@
 }
 
 @media(max-width:668px) {
+  .search-result, .search-result--friends {
+    padding: 8px;
+  }
   .search-result--friends {
     flex-direction: column;
-    padding: 16px;  
   }
+  
   .search-result__description {
     margin-right: auto;
     margin-bottom: 10px;
@@ -53,13 +57,8 @@
   }
 
    .search-result__image {
-     height: 60px;
-     width: 60px;
-   }
-   
-   .search-result__image img {
-    max-height: 5.6rem;
-    max-width: 5.6rem;
+     height: 54px;
+     width: 54px;
    }
    
    .search-result--friends .search-result__buttons {

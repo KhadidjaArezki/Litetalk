@@ -94,13 +94,14 @@
   border: 2px solid var(--clr-royal-blue);
   border-radius: 50%;
   overflow: hidden;
+  aspect-ratio: 16 / 9;
 }
 
 .message__head img {
   object-fit: cover;
   object-position: center;
-  height: 6rem;
-  width: 6rem;
+  height: 100%;
+  width: 100%;
 }
 
 .message__head--user .message__head__img {
@@ -117,13 +118,15 @@
   max-width: 500px;
   padding: 1rem 1.5rem;
   border-radius: 7px;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 .message__body--user {
   background-color: var(--clr-white);
   color: var(--clr-black);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
 }
+
 
 .message__body--friend {
   background-color: var(--clr-royal-blue);
@@ -170,11 +173,6 @@
   .message__head__img {
     width: 32px !important;
     height: 32px !important;
-  }
-  
-  .message__head__img img {
-    max-width: 28px;
-    max-height: 28px;
   }
 
   .message__head__text {

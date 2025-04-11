@@ -67,7 +67,7 @@
   background-color: var(--clr-danger-red);
 }
  
-.button--start-a-chat {
+.button--start-a-chat, .button--start-a-search {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -83,6 +83,16 @@
   font-size: 26px;
   font-family: var(--ff-text);
   font-weight: 300;
+}
+
+.button--start-a-search {
+  margin-top: 20px;
+  font-weight: 500;
+}
+
+.button--start-a-search img {
+  width: 30px;
+  height: 30px;
 }
 
 .button--start-a-chat-in-search, .button--start-a-chat--friends {
@@ -174,10 +184,15 @@
     margin: 0;
   }
   
+  .button--start-a-search {
+    margin-top: 20px;
+    font-size: 24px;
+  }
+  
   .button--start-a-chat--friends {
     position: relative;
     top: -60px;
-    margin: 0;
+    margin: 0 -15px;
   }
   
   .button--start-a-chat-in-search, .button--start-a-chat--friends {

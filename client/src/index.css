@@ -108,6 +108,6 @@ button {
   
 @media (max-width: 580px) {
   .container {
-    margin: 0 24px;
+    margin: 0 8px;
   }
 }

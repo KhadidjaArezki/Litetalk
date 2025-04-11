@@ -24,13 +24,14 @@
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
+    aspect-ratio: 16 / 9;
 }
 
 .latest-chat__image img {
     object-fit: cover;
     object-position: center;
-    height: 6.5rem;
-    width: 6.5rem;
+    height: 100%;
+    width: 100%;
 }
 
 .latest-chat__username {
@@ -52,6 +53,7 @@
 .latest-chat__message {
     margin: 0 10px;
     white-space: nowrap; 
+    max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     flex-shrink: 1;
@@ -63,34 +65,37 @@
 }
 
 .latest-chat__username-and-message-container {
-    display: flex;
-    min-width: 0;
+  display: flex;
+  min-width: 0;
+  
 }
 
-@media(max-width: 810px) {
+@media(max-width: 768px) {
     .latest-chat {
-        height: 80px;
-        padding: 0 13px;
-        width: 100%;
+      height: 80px;
+      padding: 0 13px;
+      width: 100%;
+      background-color: transparent;
+      box-shadow: none;
+    }
+    
+    .latest-chat:active {
+      background-color: var(--clr-white);
     }
 
     .latest-chat__image {
-        height: 46px;
-        width: 46px;
-    }
-    
-    .latest-chat__image img {
-      max-height: 4.2rem;
-      max-width: 4.2rem;
+      height: 46px;
+      width: 46px;
     }
 
     .latest-chat__username, 
     .latest-chat__message, 
     .latest-chat__time {
-        font-size: 14px;
+      font-size: 14px;
     }
 
     .latest-chat__username-and-message-container {
-        flex-direction: column;
+      flex-direction: column;
+      align-items: start;
     }
 }
