@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.61ae0fe1.css",
+    "main.js": "/static/js/main.7a7ffa00.js",
+    "static/media/signup-illustration.png": "/static/media/signup-illustration.cb87978344e8ea9c513e.png",
+    "static/media/default-user-profile-image.png": "/static/media/default-user-profile-image.1aaaf85f4b73bdda9666.png",
+    "static/media/litetalk-logo-name-white.svg": "/static/media/litetalk-logo-name-white.062d0c2ab091a9d7a192b0c485c75119.svg",
+    "static/media/litetalk-logo-name.svg": "/static/media/litetalk-logo-name.57e93a148c484cab09b5af3b8a428d20.svg",
+    "static/media/message-body-bg.png": "/static/media/message-body-bg.ba2c70aaea0e748f682b.png",
+    "static/media/navbar-friends-icon.svg": "/static/media/navbar-friends-icon.ef790a8b1452f0005d1c59f60b0b4152.svg",
+    "static/media/navbar-chats-icon.svg": "/static/media/navbar-chats-icon.e171ef03bd50ec2e0c4382aaa4075828.svg",
+    "static/media/litetalk-logo-icon-white.svg": "/static/media/litetalk-logo-icon-white.0e2499d3408fab2adbc34b79c32184ab.svg",
+    "static/media/litetalk-logo-icon.svg": "/static/media/litetalk-logo-icon.afc5a011ba7032f83d1e9277790f92d0.svg",
+    "static/media/profile-user-icon.svg": "/static/media/profile-user-icon.cf7a286e2d349c1b843ec43e0d9a6d74.svg",
+    "static/media/profile-picture-update-icon.svg": "/static/media/profile-picture-update-icon.b507f4ee7ec03dc6a99add0c9a04a846.svg",
+    "static/media/profile-edit-icon.svg": "/static/media/profile-edit-icon.6526e0eab7707a352d17a454b034c864.svg",
+    "static/media/profile-logout-icon.svg": "/static/media/profile-logout-icon.59b61dde65139da0e4ada2f3594e3bd2.svg",
+    "index.html": "/index.html",
+    "static/media/navbar-search-icon.svg": "/static/media/navbar-search-icon.3b4ed92dac6ddd70bee535c573fbcd6b.svg",
+    "static/media/profile-delete-icon.svg": "/static/media/profile-delete-icon.30067d13a674596c1a00670b96014567.svg",
+    "main.61ae0fe1.css.map": "/static/css/main.61ae0fe1.css.map",
+    "main.7a7ffa00.js.map": "/static/js/main.7a7ffa00.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.61ae0fe1.css",
+    "static/js/main.7a7ffa00.js"
+  ]
+}
