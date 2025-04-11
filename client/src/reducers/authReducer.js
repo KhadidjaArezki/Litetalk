@@ -7,6 +7,7 @@ import {
   getCookieValue,
 } from '../utils/cookieParser'
 import { imgToDataUrl } from '../utils/helper'
+import { getProfilePicture } from '../utils/IndexedDB'
 
 const cookieLifeInHours = process.env.REACT_APP_COOKIE_LIFE_IN_HOURS
 
@@ -21,13 +22,19 @@ const [
   storedId, storedUserName, storedEmail, storedUserToken,
 ] = storedUserData()
 
-const storedPicture = localStorage.getItem('user_profile_picture')
+const storedPictureMeta = localStorage.getItem('user_profile_picture')
   ? JSON.parse(localStorage.getItem('user_profile_picture'))
-  : undefined
+  : { isDefault: true, picture: defaultPicture }
+
+const storedPictureFile = (async () => {
+  const result = await getProfilePicture()
+  console.log('Stored profile picture: ', result)
+  return result
+})()
 
 const storedFriends = localStorage.getItem('friends')
   ? JSON.parse(localStorage.getItem('friends'))
-  : undefined
+  : null
 
 const authSlice = createSlice({
   name: 'auth',
@@ -35,7 +42,10 @@ const authSlice = createSlice({
     id: storedId ?? null,
     username: storedUserName ?? null,
     email: storedEmail ?? null,
-    picture: storedPicture ?? null,
+    picture: {
+      ...storedPictureMeta,
+      file: storedPictureFile ?? null,
+    },
     friends: storedFriends ?? null,
     token: storedUserToken ?? null,
     isOnline: true,
@@ -62,7 +72,10 @@ const authSlice = createSlice({
       createCookieInHour('username', username, cookieLifeInHours)
       createCookieInHour('email', email, cookieLifeInHours)
       createCookieInHour('token', token, cookieLifeInHours)
-      localStorage.setItem('user_profile_picture', JSON.stringify(state.picture))
+      localStorage.setItem('user_profile_picture', JSON.stringify({
+        isDefault: state.picture.isDefault,
+        picture: state.picture.picture,
+      }))
       localStorage.setItem('friends', JSON.stringify(friends))
     },
     // eslint-disable-next-line no-unused-vars
@@ -77,10 +90,6 @@ const authSlice = createSlice({
       document.cookie.split(';').forEach((c) => {
         document.cookie = resetCookie(c)
       })
-      localStorage.setItem('user_profile_picture', '')
-      localStorage.setItem('friends', '')
-      localStorage.setItem('current_friend_id', '')
-      localStorage.setItem('chats', '')
       localStorage.clear()
     },
     appendFriend: (state, action) => {
@@ -111,12 +120,25 @@ const authSlice = createSlice({
       createCookieInHour('username', username, cookieLifeInHours)
       createCookieInHour('email', email, cookieLifeInHours)
       createCookieInHour('token', state.token, cookieLifeInHours)
-      localStorage.setItem('user_profile_picture', JSON.stringify(state.picture))
+      localStorage.setItem('user_profile_picture', JSON.stringify({
+        isDefault: state.picture.isDefault,
+        picture: state.picture.picture,
+      }))
+    },
+    setProfilePictureFile: (state, action) => {
+      if (state.picture) {
+        state.picture.file = action.payload ?? null
+      }
     },
   },
 })
 export const {
-  setCredentials, resetCredentials, appendFriend, removeFriend, updateProfile,
+  setCredentials,
+  resetCredentials,
+  appendFriend,
+  removeFriend,
+  updateProfile,
+  setProfilePictureFile,
 } = authSlice.actions
 export default authSlice.reducer
 
