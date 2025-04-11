@@ -16,7 +16,7 @@ function Friends() {
   const id = useSelector(selectCurrentId)
   const username = useSelector(selectCurrentUsername)
   const email = useSelector(selectCurrentEmail)
-  const { isDefault, file } = useSelector(selectCurrentPicture)
+  const { file } = useSelector(selectCurrentPicture)
   const friends = useSelector(selectCurrentFriends)
 
   const [updateUser] = useUpdateUserMutation()
@@ -26,12 +26,13 @@ function Friends() {
   const [currentResults, setCurrentResults] = useState([...friends])
   const container = 'Friends'
 
-  /* Re-render component every time friends are updated   */
-  /* Compare friends and current results to find a        */
-  /* friend that has been unfriended, i.e., a friend      */
-  /* that is in current results but no longer in friends. */
-  /* Render the updated results if a friend has been      */
-  /* removed or the entire friends list if not.           */
+  /* Re-render component every time friends are updated
+   * Compare friends and current results to find a
+   * friend that has been unfriended, i.e., a friend
+   * that is in current results but no longer in friends.
+   * Render the updated results if a friend has been
+   * removed or the entire friends list if not.
+   */
   useEffect(() => {
     const removedFriend = currentResults.find((friend) => (
       !friends.some((f) => f.id === friend.id)
@@ -63,14 +64,18 @@ function Friends() {
       friendsIds.splice(friendsIds.indexOf(friendId), 1)
       return friendsIds
     }
+    const pictureFileToSend = file?.data
+      ? new File(
+        [new Blob([new Uint8Array(file.data.data)], { type: file.contentType })],
+        `${username}.${file.contentType.substring(file.contentType.indexOf('/') + 1)}`,
+        { type: file.contentType },
+      )
+      : null
     const updatedUser = await updateUser({
       id,
       username,
       email,
-      picture: isDefault ? null : new File(
-        [file],
-        `${username}.${file.contentType.substring(file.contentType.indexOf('/') + 1)}`,
-      ),
+      picture: pictureFileToSend,
       friends: getNewFriends(),
     }).unwrap()
     const updatedFriends = updatedUser.friends

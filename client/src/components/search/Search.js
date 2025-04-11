@@ -18,7 +18,7 @@ function Search() {
   const id = useSelector(selectCurrentId)
   const username = useSelector(selectCurrentUsername)
   const email = useSelector(selectCurrentEmail)
-  const { isDefault, file } = useSelector(selectCurrentPicture)
+  const { file } = useSelector(selectCurrentPicture)
   const friends = useSelector(selectCurrentFriends)
 
   const [updateUser] = useUpdateUserMutation()
@@ -46,14 +46,18 @@ function Search() {
   }
 
   const handleAdd = async (personId) => {
+    const pictureFileToSend = file?.data
+      ? new File(
+        [new Blob([new Uint8Array(file.data.data)], { type: file.contentType })],
+        `${username}.${file.contentType.substring(file.contentType.indexOf('/') + 1)}`,
+        { type: file.contentType },
+      )
+      : null
     const updatedUser = await updateUser({
       id,
       username,
       email,
-      picture: isDefault ? null : new File(
-        [file],
-        `${username}.${file.contentType.substring(file.contentType.indexOf('/') + 1)}`,
-      ),
+      picture: pictureFileToSend,
       friends: friends.map((friend) => friend.id).concat(personId),
     }).unwrap()
     const updatedFriends = updatedUser.friends
