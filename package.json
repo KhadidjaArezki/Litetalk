@@ -1,19 +1,19 @@
 {
-    "name": "litetalk",
-    "version": "1.0.0",
-    "description": "a lightweight app for connecting with friends",
-    "main": "server/index.js",
-    "scripts": {
-      "buildui": "rm -rf build && npm run build",
-      "build": "cd client && npm build",
-      "start": "cd server && npm start",
-      "install": "cd server && npm install"
-     },
-    "author": "v39-bears-team-11",
-    "license": "MIT",
-    "private": true,
-    "workspaces": [
-          "server",
-          "client"
-      ]
-  }
+  "name": "litetalk",
+  "version": "1.0.0",
+  "description": "a lightweight app for connecting with friends",
+  "main": "server/index.js",
+  "scripts": {
+    "buildui": "rm -rf build && npm run build",
+    "build": "cd client && npm build",
+    "start": "cd server && npm start",
+    "install": "cd server && npm install"
+   },
+  "author": "v39-bears-team-11",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+    ]
+}
