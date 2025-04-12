@@ -27,11 +27,11 @@ const UseCameraModal = forwardRef(({
     (async () => {
       if (isOpen) {
         // When initializing the camera
-        const aspectRatio = video.videoHeight / video.videoWidth
+        const aspectRatio = window.innerHeight / window.innerWidth
         const constraints = {
           video: {
-            width: { min: 640, ideal: 1280, max: 1920 },
-            height: { min: 360, ideal: 720, max: 1080 },
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
             aspectRatio,
           },
         }
@@ -39,9 +39,11 @@ const UseCameraModal = forwardRef(({
         const currentStream = await navigator.mediaDevices.getUserMedia(constraints)
         setStream(currentStream)
         video.srcObject = currentStream
+        /*
         const track = currentStream.getVideoTracks()[0]
         const settings = track.getSettings()
         console.log('Actual video resolution:', settings.width, settings.height)
+        */
       }
     })()
   }, [isOpen])
