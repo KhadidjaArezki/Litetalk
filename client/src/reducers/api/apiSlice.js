@@ -32,7 +32,7 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
   if (result?.error?.status === 403 || result?.error?.status === 401) {
     if (!refreshPromise) {
       refreshPromise = (async () => {
-        console.log('Refresh token expired. Sending request for new token')
+        // console.log('Refresh token expired. Sending request for new token')
         const refreshResult = await baseQuery(REFRESH_URI, api, extraOptions)
         if (refreshResult?.data) {
           const userState = api.getState().auth

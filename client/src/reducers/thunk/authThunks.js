@@ -13,7 +13,7 @@ export const saveProfilePictureToDB = (filePromise) => async (dispatch) => {
     if (result && file) {
       dispatch(setProfilePictureFile(file))
     }
-    console.log('Saved image to IndexedDB:', result)
+    // console.log('Saved image to IndexedDB:', result)
   } catch (err) {
     console.error('Failed to save image file:', err)
   }

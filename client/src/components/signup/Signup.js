@@ -85,7 +85,6 @@ function Signup() {
         dispatch(setCredentials({ ...userData }))
         navigate('/')
       } catch (error) {
-        console.log(`error message: ${error.data?.error}`)
         if (error.status === 409) {
           setErrMsg(`${error.data?.error ?? error.error}`)
         } else if (error.status === 400) {

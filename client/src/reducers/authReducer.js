@@ -28,7 +28,7 @@ const storedPictureMeta = localStorage.getItem('user_profile_picture')
 
 const storedPictureFile = (async () => {
   const result = await getProfilePicture()
-  console.log('Stored profile picture: ', result)
+  // console.log('Stored profile picture: ', result)
   return result
 })()
 

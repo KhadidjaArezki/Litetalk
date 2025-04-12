@@ -5,7 +5,7 @@ export async function openImageDB() {
     dbRequest.onupgradeneeded = (e) => {
       const db = e.target.result
       if (!db.objectStoreNames.contains('images')) {
-        console.log('Creating object store...')
+        // console.log('Creating object store...')
         db.createObjectStore('images', { keyPath: 'id' })
       }
     }
@@ -13,7 +13,7 @@ export async function openImageDB() {
       resolve(e.target.result)
     }
     dbRequest.onerror = (e) => {
-      console.error('Failed to open IndexedDB:', e.target.error)
+      // console.error('Failed to open IndexedDB:', e.target.error)
       reject(e.target.error)
     }
   })
@@ -35,12 +35,12 @@ export async function saveProfilePicture(imageFile) {
         resolve(true)
       }
       tx.onerror = (e) => {
-        console.error('Save failed:', e.target.error)
+        // console.error('Save failed:', e.target.error)
         reject(e.target.error)
       }
     })
   } catch (err) {
-    console.error('Error saving profile picture:', err)
+    // console.error('Error saving profile picture:', err)
     return false
   }
 }
@@ -58,12 +58,12 @@ export async function getProfilePicture() {
         resolve(result?.data ?? null)
       }
       getRequest.onerror = (e) => {
-        console.error('Error fetching profile picture:', e.target.error)
+        // console.error('Error fetching profile picture:', e.target.error)
         resolve(null)
       }
     })
   } catch (err) {
-    console.error('Error accessing profile picture:', err)
+    // console.error('Error accessing profile picture:', err)
     return null
   }
 }
