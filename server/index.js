@@ -2,7 +2,7 @@ const http = require('http')
 const app = require('./app')
 require('dotenv').config()
 const { infoLogger } = require('./utils/logger')
-const { PORT, PROD_SERVER_URL } = require('./utils/config')
+const { PORT, PROD_SERVER_URL, CLIENT_DEV_SERVER_URL } = require('./utils/config')
 const { SetSocketServer } = require('./socket/index')
 const server = http.createServer(app)
 
@@ -11,7 +11,7 @@ const io = require('socket.io')(server, {
   /* Limit message size to 2MB */
   maxHttpBufferSize: 2e6,
   cors: {
-    origin: [PROD_SERVER_URL],
+    origin: [PROD_SERVER_URL, CLIENT_DEV_SERVER_URL],
   },
 })
 
