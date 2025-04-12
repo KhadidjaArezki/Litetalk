@@ -1,5 +1,6 @@
 .imageModal {
-  width: 400px;
+  max-width: 400px;
+  height: fit-content;
   top: 15%;
   left: 35%;
   border: 0;
@@ -75,8 +76,9 @@
 
 .imageModal video,
 .imageModal canvas {
-  width: 320px;
-  height: 240px;
+  object-fit: contain;
+  width: 100%;
+  height: auto;
   margin-bottom: 1rem;
   border-radius: 10px;
   border: 2px solid var(--clr-royal-blue);

@@ -27,17 +27,21 @@ const UseCameraModal = forwardRef(({
     (async () => {
       if (isOpen) {
         // When initializing the camera
+        const aspectRatio = video.videoHeight / video.videoWidth
         const constraints = {
           video: {
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
-            aspectRatio: 16 / 9, // common webcam ratio
+            width: { min: 640, ideal: 1280, max: 1920 },
+            height: { min: 360, ideal: 720, max: 1080 },
+            aspectRatio,
           },
         }
         /* Requesting User Permission */
         const currentStream = await navigator.mediaDevices.getUserMedia(constraints)
         setStream(currentStream)
         video.srcObject = currentStream
+        const track = currentStream.getVideoTracks()[0]
+        const settings = track.getSettings()
+        console.log('Actual video resolution:', settings.width, settings.height)
       }
     })()
   }, [isOpen])
@@ -93,6 +97,8 @@ const UseCameraModal = forwardRef(({
     /* as canvas - from the current stream      */
     const drawImageOnCanvas = () => {
       showCanvas()
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
       setClearCanvas(false)
     }
