@@ -68,7 +68,7 @@ function Search() {
     )
     dispatch(appendFriend({
       ...newFriend,
-      picture: imgToDataUrl(newFriend.picture),
+      picture: newFriend.picture ? imgToDataUrl(newFriend.picture) : null,
     }))
   }
 
