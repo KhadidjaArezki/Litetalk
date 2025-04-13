@@ -45,10 +45,11 @@ export const sortArrayOfObjects = (
 export const imgToDataUrl = (content) => {
   /* image and contentType are the variables which will */
   /* hold the data necessary to create our image url    */
+  if (!content) return ''
   let image = ''
   let contentType = ''
   /* In case of a url string, no further processing is required */
-  if (typeof content.data === 'string') {
+  if (typeof content?.data === 'string') {
     image = content.data
     contentType = content.contentType
   } else {

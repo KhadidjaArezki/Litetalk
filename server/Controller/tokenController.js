@@ -20,11 +20,11 @@ const getTokenController = async (req, res) => {
     secure: true,
   })
   
-  console.log(`Refresh Token: ${oldRefreshToken}`)
+  // console.log(`Refresh Token: ${oldRefreshToken}`)
 
   // Calling exec is not neccessary, but helps with debugging
   const foundUser = await User.findOne({ refreshToken: oldRefreshToken }).exec()
-  console.log(`found user: ${foundUser?.refreshToken}`)
+  // console.log(`found user: ${foundUser?.refreshToken}`)
 
   jwt.verify(oldRefreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
     //console.log('Verifiying Refresh Token')

@@ -5,8 +5,11 @@
   "main": "server/index.js",
   "scripts": {
     "buildui": "rm -rf build && npm run build",
+    "buildui-ngrok": "rm -rf build && npm run build-ngrok",
     "build": "cd client && npm run build",
-    "start": "cd server && npm start"
+    "build-ngrok": "cd client && npm run build-ngrok",
+    "start": "cd server && npm start",
+    "start-ngrok": "cd server && npm run start-ngrok"
    },
   "author": "v39-bears-team-11",
   "license": "MIT",
