@@ -13,7 +13,7 @@ function Messages() {
   /* Get the chat object that corresponds to the      */
   /* currently selected friend from the messages state */
   const currentFriendChat = chats.find((chat) => chat.friendId === currentFriendId)
-  const currentFriendMessages = currentFriendChat?.messages
+  const currentFriendMessages = currentFriendChat?.messages ?? []
 
   /* Get the user information of the currently selected */
   /* user from the friends array in the user store      */
@@ -31,6 +31,13 @@ function Messages() {
 
   return (
     <div className={styles.messages}>
+      { currentFriendMessages?.length === 0
+        && (
+          <h4>
+            {`This is the start of your conversations with 
+            ${friends.find((f) => f.id === currentFriendId).username}`}
+          </h4>
+        )}
       { currentFriendMessages?.map((message) => (
         <Message
           ref={scrollRef}
