@@ -1,5 +1,5 @@
 .footer {
-  padding: 6rem 0 0;
+  padding: 4rem 0 0;
 }
 
 .footer p {
@@ -7,6 +7,9 @@
 }
 
 @media (max-width: 768px) {
+  .footer {
+    display: none;
+  }
   .footer p {
     font-size: 1.5rem;
   }

@@ -61,7 +61,13 @@
 
 @media(max-width: 768px) {
   .message-forms {
-    margin-top: 8px;
+    margin: 8px;
+    position: fixed;
+    bottom: 60px;
+    left: 40px;
+    width: calc(100vw - 120px);
+    background-color: var(--clr-pampas-pink);
+    padding: 6px;
   }
 
   .message-forms > button {
@@ -80,5 +86,13 @@
   .message-form__btn img {
     width: 20px;
     height: 20px;
+  }
+}
+
+@media(max-width: 580px) {
+  .message-forms {
+    left: -6px;
+    bottom: 50px;
+    width: calc(100vw - 5px);
   }
 }

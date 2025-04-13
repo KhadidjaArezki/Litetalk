@@ -1,8 +1,9 @@
 #chatroom {
-  height: calc(100vh - 80px);
+  height: calc(100vh - 10px);
   display: flex;
   flex-direction: column;
-  gap: 42px;
+  gap: 8px;
+  padding-top: 70px;
 }
 
 #chatroom dialog img {
@@ -14,8 +15,9 @@
 
 @media(max-width: 768px) {
   #chatroom {
-    height: calc(100vh - 125px);
-    gap: 10px;
+    height: calc(100vh - 68px);
+    gap: 0;
+    padding-top: 60px;
   }
 }
 

@@ -1,6 +1,6 @@
 .Edit__container {
   height: 85vh;
-  padding: 4rem 2rem 0;
+  padding: 8rem 2rem 0;
 }
 
 .Edit__heading {
@@ -52,7 +52,7 @@
 /* media query for medium screens (tables, ipads) */
 @media screen and (min-width: 768px) {
   .Edit__container {
-    padding: 6rem 8rem;
+    padding: 9rem 8rem;
   }
 
   .Edit__button {
@@ -63,7 +63,7 @@
 /* media query for medium screens (tables, ipads) */
 @media screen and (min-width: 1024px) {
   .Edit__container {
-    padding: 6rem 13.5rem;
+    padding: 10rem 13.5rem;
   }
 
   .Edit__heading {
