@@ -63,7 +63,7 @@
   .message-forms {
     margin: 8px;
     position: fixed;
-    bottom: 60px;
+    bottom: 50px;
     left: 40px;
     width: calc(100vw - 120px);
     background-color: var(--clr-pampas-pink);
@@ -92,7 +92,7 @@
 @media(max-width: 580px) {
   .message-forms {
     left: -6px;
-    bottom: 50px;
+    bottom: 45px;
     width: calc(100vw - 5px);
   }
 }
