@@ -38,7 +38,7 @@ function Profile() {
   }
 
   return (
-    <div role="contentinfo" className={styles.Profile}>
+    <div role="contentinfo" className={`${styles.Profile} container main`}>
       {/* header section contains the profile heading and profile
       actions buttons */}
       <header className={styles.Profile__heading}>

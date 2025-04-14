@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SignupFormButton from '../button/SignupFormButton'
 import SignupFormField from './SignupFormField'
 import userIcon from '../../icons/signup/signup-user-icon.png'
@@ -13,6 +13,12 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
     username: '',
     email: '',
     password: '',
+  })
+
+  const [isChangedInputValues, setIsChangedInputValues] = useState({
+    username: false,
+    email: false,
+    password: false,
   })
 
   //    -current error message for each field in a form of a object of strings
@@ -48,6 +54,12 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
     return false
   }
 
+  useEffect(() => {
+    (async () => {
+      isFormValid()
+    })()
+  }, [inputValues])
+
   // Create handleInput function runs on every change of any input field.
   const handleInput = (e) => {
     // Store name (as property) and value of the current input field.
@@ -58,6 +70,10 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
     setInputValues({
       ...inputValues,
       [property]: value,
+    })
+    setIsChangedInputValues({
+      ...isChangedInputValues,
+      [property]: true,
     })
   }
 
@@ -95,7 +111,7 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
               iconSrc={emailIcon}
               handleInput={handleInput}
               formChoice={formChoice}
-              error={errors.email}
+              error={isChangedInputValues.email ? errors.email : ''}
               value={inputValues.email}
             />
           ) : null}
@@ -107,7 +123,7 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
           iconSrc={userIcon}
           handleInput={handleInput}
           formChoice={formChoice}
-          error={errors.username}
+          error={isChangedInputValues.username ? errors.username : ''}
           value={inputValues.name}
         />
 
@@ -118,7 +134,7 @@ function SignupForm({ formChoice, onValidatedSubmit }) {
           iconSrc={passwordIcon}
           handleInput={handleInput}
           formChoice={formChoice}
-          error={errors.password}
+          error={isChangedInputValues.password ? errors.password : ''}
           value={inputValues.password}
         />
 

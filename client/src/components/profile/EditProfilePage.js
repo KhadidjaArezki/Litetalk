@@ -31,25 +31,26 @@ function EditProfilePage() {
 
   const handleSave = async (event) => {
     event.preventDefault()
-    const { newUsername, newEmail } = profileFormRef.current
-
-    const pictureFileToSend = file?.data
-      ? new File(
-        [new Blob([new Uint8Array(file.data.data)], { type: file.contentType })],
-        `${username}.${file.contentType.substring(file.contentType.indexOf('/') + 1)}`,
-        { type: file.contentType },
-      )
-      : null
-    const updatedUser = await updateUser({
-      id,
-      username: newUsername,
-      email: newEmail,
-      friends,
-      picture: pictureFileToSend,
-    }).unwrap()
-    dispatch(saveProfilePictureToDB(updatedUser.picture))
-    dispatch(updateProfile(updatedUser))
-    navigate('/profile')
+    const { newUsername, newEmail, isFormValid } = profileFormRef.current
+    if (isFormValid()) {
+      const pictureFileToSend = file?.data
+        ? new File(
+          [new Blob([new Uint8Array(file.data.data)], { type: file.contentType })],
+          `${username}.${file.contentType.substring(file.contentType.indexOf('/') + 1)}`,
+          { type: file.contentType },
+        )
+        : null
+      const updatedUser = await updateUser({
+        id,
+        username: newUsername,
+        email: newEmail,
+        friends,
+        picture: pictureFileToSend,
+      }).unwrap()
+      dispatch(saveProfilePictureToDB(updatedUser.picture))
+      dispatch(updateProfile(updatedUser))
+      navigate('/profile')
+    }
   }
 
   const handleCancel = () => {
