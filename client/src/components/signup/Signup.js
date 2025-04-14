@@ -82,7 +82,16 @@ function Signup() {
     if (formChoice === 'signup') {
       try {
         const userData = await signup({ username, email, password }).unwrap()
-        dispatch(setCredentials({ ...userData }))
+        const friends = userData.friends.map((friend) => ({
+          ...friend,
+          picture: friend.picture
+            ? imgToDataUrl(friend.picture)
+            : null,
+        }))
+        dispatch(setCredentials({
+          ...userData,
+          friends,
+        }))
         navigate('/')
       } catch (error) {
         if (error.status === 409) {

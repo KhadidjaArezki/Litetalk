@@ -23,7 +23,7 @@ const postUserController = async (req, res) => {
     email,
     passwordHash,
     picture: null,
-    contacts: [],
+    contacts: ['67fc2c2ee22742f7f9d67ac2'],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   })
@@ -46,7 +46,10 @@ const postUserController = async (req, res) => {
     createdUser._id,
     userToUpdate,
     { new: true },
-  )
+  ).populate('contacts', {
+    username: 1,
+    picture: 1,
+  })
 
   res.cookie("jwt", refreshToken, {
     httpOnly: true,

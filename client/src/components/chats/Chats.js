@@ -9,6 +9,7 @@ import { setCurrentFriendId } from '../../reducers/messageReducer'
 import StartAChatButton from '../button/StartAChatButton'
 import ModalStartAChat from '../modal/ModalStartAChat'
 import LatestChats from './LatestChats'
+import SearchResult from '../search_result/SearchResult'
 import Button from '../button/Button'
 import btnStyles from '../../styles/Button.module.css'
 import magnifyingGlass from '../../icons/searchbox/magnifying-glass.png'
@@ -31,47 +32,71 @@ function Chats() {
   const onOpenModal = () => modalRef.current.showModal()
   const onCloseModal = () => modalRef.current.close()
 
-  if (friends?.length) {
-    return (
-      <div id="chats" className="container main">
-        <StartAChatButton
-          handleOnClick={onOpenModal}
-          btnText="Start a chat"
-          btnStyles={btnStyles['button--start-a-chat']}
-        />
-        <ModalStartAChat
-          friends={friends}
-          ref={modalRef}
-          onCloseModal={onCloseModal}
-          onOpenAChatClick={onOpenAChatClick}
-        />
-        <LatestChats onOpenAChatClick={onOpenAChatClick} />
-      </div>
-    )
-  } return (
-    <div id="chats" className="container main">
-      <h1>
-        {`Hello ${username}! Welcome to LiteTalk!`}
-      </h1>
-      <h2>
-        Only few more
-        <span className="italic"> lite </span>
-        steps...
-      </h2>
-      <h4>...to connect and chat with your friends!</h4>
-      <br />
-      <h4>To look for your friends and add them to your contacts list</h4>
-      <h4>click the search button below</h4>
-      <h4>Your friends will get your messages after they add you</h4>
-      <Button
-        text="Start Search"
-        className={btnStyles['button--start-a-search']}
-        onClick={() => navigate('/search')}
-        icon={magnifyingGlass}
-        iconAlt="magnifying glass"
-      />
-    </div>
-  )
+  function showChatsPageForNewUser(dummyUser) {
+    if (friends?.length === 0 || (friends?.length === 1 && dummyUser)) {
+      const styles = {
+        margin: 0,
+        marginTop: '24px',
+      }
+      return (
+        <div id="chats" className="container main">
+          <h2>
+            {`Hello ${username}! Welcome to LiteTalk!`}
+          </h2>
+          <h4>To look for your friends and add them</h4>
+          <h4>click the search button below</h4>
+          <Button
+            text="Start Search"
+            className={`${btnStyles['button--start-a-search']}`}
+            style={styles}
+            onClick={() => navigate('/search')}
+            icon={magnifyingGlass}
+            iconAlt="magnifying glass"
+          />
+          <br />
+          {dummyUser && (
+            <>
+              <h4>MeanWhile, you can try the app by chatting with dummy_user</h4>
+              <br />
+              <SearchResult
+                result={dummyUser}
+                container="people"
+                modalTitle="Confirm Friend Request"
+                getModalText={(name) => `Are you sure you want to add ${name} to your friends list ?`}
+                confirmButtonText="Add"
+                formHandler={() => null}
+              />
+            </>
+          )}
+        </div>
+      )
+    }
+    return null
+  }
+
+  function showChatsPage() {
+    const dummyUser = friends?.find((f) => f.username === 'dummy_user')
+    if (friends?.length > 1 || (friends?.length === 1 && !dummyUser)) {
+      return (
+        <div id="chats" className="container main">
+          <StartAChatButton
+            handleOnClick={onOpenModal}
+            btnText="Start a chat"
+            btnStyles={btnStyles['button--start-a-chat']}
+          />
+          <ModalStartAChat
+            friends={friends}
+            ref={modalRef}
+            onCloseModal={onCloseModal}
+            onOpenAChatClick={onOpenAChatClick}
+          />
+          <LatestChats onOpenAChatClick={onOpenAChatClick} />
+        </div>
+      )
+    }
+    return showChatsPageForNewUser(dummyUser)
+  }
+  return showChatsPage()
 }
 
 export default Chats
