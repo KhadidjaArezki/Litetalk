@@ -99,7 +99,15 @@ function LatestChats({ onOpenAChatClick }) {
   return chatsData
     ? (
       <>
-        {latestChats?.length > 0 && <ContainerHeading text="Latest Chats" />}
+        {latestChats?.length > 0
+          ? <ContainerHeading text="Latest Chats" />
+          : (
+            <h4
+              style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}
+            >
+              Your chats will appear here
+            </h4>
+          )}
         <div>
           {
             latestChats?.map((chat) => (
