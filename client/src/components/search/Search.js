@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   selectCurrentId,
@@ -8,6 +8,7 @@ import {
   selectCurrentFriends,
   appendFriend,
 } from '../../reducers/authReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import SearchBox from '../searchbox/SearchBox'
 import SearchResults from '../search_results/SearchResults'
 import { useUpdateUserMutation } from '../../reducers/api/userApiSlice'
@@ -21,6 +22,8 @@ function Search() {
   const { file } = useSelector(selectCurrentPicture)
   const friends = useSelector(selectCurrentFriends)
 
+  const [errMsg, setErrMsg] = useState('')
+
   const [updateUser] = useUpdateUserMutation()
   const [search] = useSearchMutation()
 
@@ -29,20 +32,38 @@ function Search() {
   const container = 'people'
   const [currentResults, setCurrentResults] = useState([])
 
+  useEffect(() => {
+    if (errMsg) {
+      dispatch(setNotification(
+        {
+          message: errMsg,
+          type: 'error',
+        },
+        5,
+      ))
+      setErrMsg('')
+    }
+  }, [errMsg])
+
   const handleSearch = async (event) => {
     event.preventDefault()
     const searchKeywords = event.target.search.value
-    const results = await search({
+    const data = await search({
       searchKeywords,
-    }).unwrap()
-    setCurrentResults(results
-      .filter((user) => user.username !== username)
-      .map((user) => ({
-        ...user,
-        picture: user.picture
-          ? imgToDataUrl(user.picture)
-          : null,
-      })))
+    })
+    if (data.error) {
+      setErrMsg('Search Failed')
+    } else {
+      const results = data.data
+      setCurrentResults(results
+        .filter((user) => user.username !== username)
+        .map((user) => ({
+          ...user,
+          picture: user.picture
+            ? imgToDataUrl(user.picture)
+            : null,
+        })))
+    }
   }
 
   const handleAdd = async (personId) => {
@@ -53,23 +74,28 @@ function Search() {
         { type: file.contentType },
       )
       : null
-    const updatedUser = await updateUser({
+    const data = await updateUser({
       id,
       username,
       email,
       picture: pictureFileToSend,
       friends: friends.map((friend) => friend.id).concat(personId),
-    }).unwrap()
-    const updatedFriends = updatedUser.friends
+    })
+    if (data.error) {
+      setErrMsg('Failed to add friend')
+    } else {
+      const updatedUser = data.data
+      const updatedFriends = updatedUser.friends
 
-    /* Find the friend that is in updatedFriends but not in curren user friends */
-    const newFriend = updatedFriends.find(
-      (friend) => !friends.some((f) => f.id === friend.id),
-    )
-    dispatch(appendFriend({
-      ...newFriend,
-      picture: newFriend.picture ? imgToDataUrl(newFriend.picture) : null,
-    }))
+      /* Find the friend that is in updatedFriends but not in curren user friends */
+      const newFriend = updatedFriends.find(
+        (friend) => !friends.some((f) => f.id === friend.id),
+      )
+      dispatch(appendFriend({
+        ...newFriend,
+        picture: newFriend.picture ? imgToDataUrl(newFriend.picture) : null,
+      }))
+    }
   }
 
   return (

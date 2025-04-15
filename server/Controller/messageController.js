@@ -103,7 +103,7 @@ const postMessageController = async (req, res, next) => {
       'Require userId, friendId, content and timestamp to not be null or undefined',
       400,
     )
-    next(error)
+    return res.status(400)
   }
 
   try {
@@ -124,9 +124,7 @@ const postMessageController = async (req, res, next) => {
     })
     res.status(201).send(result)
   } catch (error) {
-    // if the operation is unsuccessful,
-    // pass the error to the error middlware
-    next(error)
+    return res.status(500)
   }
 }
 

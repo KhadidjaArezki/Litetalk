@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useUpdateUserMutation } from '../../reducers/api/userApiSlice'
 import {
@@ -9,6 +9,7 @@ import {
   selectCurrentFriends,
   updateProfile,
 } from '../../reducers/authReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import ImageModal from '../modal/ImageModal'
 import ProfileButton from './ProfileButton'
 import defaultPicture from '../../icons/default-user-profile-image.png'
@@ -26,20 +27,40 @@ function ProfileUser() {
   const dispatch = useDispatch()
   const imageModalRef = useRef()
 
+  const [errMsg, setErrMsg] = useState('')
+
+  useEffect(() => {
+    if (errMsg) {
+      dispatch(setNotification(
+        {
+          message: errMsg,
+          type: 'error',
+        },
+        5,
+      ))
+      setErrMsg('')
+    }
+  }, [errMsg])
+
   const handleChangePhoto = async (imageFile) => {
-    const updatedUser = await updateUser({
+    const data = await updateUser({
       id,
       username,
       email,
       friends: friends.map((f) => f.id),
       picture: imageFile,
-    }).unwrap()
-    const userPicture = updatedUser.picture ?? null
-    dispatch(saveProfilePictureToDB(userPicture))
-    dispatch(updateProfile({
-      ...updatedUser,
-      picture: userPicture,
-    }))
+    })
+    if (data.error) {
+      setErrMsg('Failed to update profile picture')
+    } else {
+      const updatedUser = data.data
+      const userPicture = updatedUser.picture ?? null
+      dispatch(saveProfilePictureToDB(userPicture))
+      dispatch(updateProfile({
+        ...updatedUser,
+        picture: userPicture,
+      }))
+    }
   }
 
   return (

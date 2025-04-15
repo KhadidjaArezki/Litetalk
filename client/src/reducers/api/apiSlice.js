@@ -34,6 +34,7 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
       refreshPromise = (async () => {
         // console.log('Refresh token expired. Sending request for new token')
         const refreshResult = await baseQuery(REFRESH_URI, api, extraOptions)
+        console.log(refreshResult)
         if (refreshResult?.data) {
           const userState = api.getState().auth
           await api.dispatch(setCredentials({
@@ -41,6 +42,9 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
             ...refreshResult.data,
           }))
           return refreshResult.data
+        }
+        if (refreshResult.error?.originalStatus === 500) {
+          return refreshResult
         }
         // If user is not authorized to get token, log out
         await baseQuery(

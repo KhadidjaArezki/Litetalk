@@ -5,6 +5,7 @@ import {
   selectCurrentId,
   selectCurrentFriends,
 } from '../../reducers/authReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import { useGetAllMessagesMutation } from '../../reducers/api/messageApiSlice'
 import { sortArrayOfObjects } from '../../utils/helper'
 import ContainerHeading from '../container_heading/ContainerHeading'
@@ -17,19 +18,39 @@ function LatestChats({ onOpenAChatClick }) {
   const [getAllMessages] = useGetAllMessagesMutation()
 
   const [latestChats, setLatestChats] = useState([])
+  const [errMsg, setErrMsg] = useState('')
 
   const dispatch = useDispatch()
 
   useEffect(() => {
     (async () => {
-      const messages = await getAllMessages({ id }).unwrap()
-      dispatch(setMessages(messages))
+      const data = await getAllMessages({ id })
+      if (data.error) {
+        dispatch(setMessages(chatsData))
+        setErrMsg('Failed to get new chats')
+      } else {
+        const messages = data.data
+        dispatch(setMessages(messages))
+      }
     })()
   }, [friends])
 
   useEffect(() => {
+    if (errMsg) {
+      dispatch(setNotification(
+        {
+          message: errMsg,
+          type: 'error',
+        },
+        5,
+      ))
+      setErrMsg('')
+    }
+  }, [errMsg])
+
+  useEffect(() => {
     (async () => {
-      const latestChatsUnsorted = chatsData.reduce(
+      const latestChatsUnsorted = chatsData?.reduce(
         (newArr, currentChat) => {
           //  Use provided friend id (from user messages) to get the friend from the friends data
           const { friendId } = currentChat
@@ -69,17 +90,19 @@ function LatestChats({ onOpenAChatClick }) {
         [],
       )
       // Set state
-      setLatestChats(sortArrayOfObjects(latestChatsUnsorted, 'timestamp', 'desc', 'array'))
+      if (latestChatsUnsorted) {
+        setLatestChats(sortArrayOfObjects(latestChatsUnsorted, 'timestamp', 'desc', 'array'))
+      }
     })()
   }, [chatsData])
 
   return chatsData
     ? (
       <>
-        {latestChats.length > 0 && <ContainerHeading text="Latest Chats" />}
+        {latestChats?.length > 0 && <ContainerHeading text="Latest Chats" />}
         <div>
           {
-            latestChats.map((chat) => (
+            latestChats?.map((chat) => (
               <LatestChat
                 key={chat.id}
                 id={chat.id}

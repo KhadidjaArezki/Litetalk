@@ -50,7 +50,7 @@ function Signup() {
     if (formChoice === 'login') {
       const data = await login({ username, password })
       if (data.error?.status === 401 || data.error?.status === 403) {
-        setErrMsg('Invalid Credentials.')
+        setErrMsg('Invalid Credentials')
       } else {
         try {
           const userData = data.data

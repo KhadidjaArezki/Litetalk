@@ -1,11 +1,12 @@
+import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import {
   selectCurrentUsername,
   selectCurrentPicture,
   resetCredentials,
 } from '../../reducers/authReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import styles from '../../styles/User.module.css'
 import { ReactComponent as UserIcon } from '../../icons/profile/profile-user-icon.svg'
 import { ReactComponent as LogoutIcon } from '../../icons/profile/profile-logout-icon.svg'
@@ -19,14 +20,33 @@ function User() {
   const userRef = useRef()
   const dispatch = useDispatch()
 
+  const [errMsg, setErrMsg] = useState('')
+
+  useEffect(() => {
+    if (errMsg) {
+      dispatch(setNotification(
+        {
+          message: errMsg,
+          type: 'error',
+        },
+        5,
+      ))
+      setErrMsg('')
+    }
+  }, [errMsg])
+
   const handleUserClick = () => {
     userRef.current.classList.toggle('open')
   }
 
   const handleLogout = async () => {
-    await logout()
-    dispatch(saveProfilePictureToDB(null))
-    dispatch(resetCredentials())
+    const data = await logout()
+    if (data.error) {
+      setErrMsg('Logout Failed')
+    } else {
+      dispatch(saveProfilePictureToDB(null))
+      dispatch(resetCredentials())
+    }
   }
 
   return (

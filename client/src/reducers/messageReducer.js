@@ -2,7 +2,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const storedCurrentFriendId = localStorage.getItem('current_friend_id')
-const storedChats = JSON.parse(localStorage.getItem('chats'))
+const storedChats = localStorage.getItem('chats')
+  ? JSON.parse(localStorage.getItem('chats'))
+  : []
 
 const initialState = {
   currentFriendId: storedCurrentFriendId ?? '',

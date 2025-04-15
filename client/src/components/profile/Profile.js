@@ -1,5 +1,5 @@
 /* eslint-disable react/self-closing-comp */
-import { useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -9,6 +9,7 @@ import {
   resetCredentials,
 } from '../../reducers/authReducer'
 import { useRemoveUserMutation } from '../../reducers/api/userApiSlice'
+import { setNotification } from '../../reducers/notificationReducer'
 import ProfileForm from './ProfileForm'
 import ProfileButton from './ProfileButton'
 import ProfileUser from './ProfileUser'
@@ -30,11 +31,30 @@ function Profile() {
 
   const modalRef = useRef()
 
+  const [errMsg, setErrMsg] = useState('')
+
+  useEffect(() => {
+    if (errMsg) {
+      dispatch(setNotification(
+        {
+          message: errMsg,
+          type: 'error',
+        },
+        5,
+      ))
+      setErrMsg('')
+    }
+  }, [errMsg])
+
   const handleDeleteProfile = async () => {
-    await removeUser(id)
-    dispatch(saveProfilePictureToDB(null))
-    dispatch(resetCredentials())
-    navigate('/signup')
+    const data = await removeUser(id)
+    if (data.error) {
+      setErrMsg('Failed to delete profile')
+    } else {
+      dispatch(saveProfilePictureToDB(null))
+      dispatch(resetCredentials())
+      navigate('/signup')
+    }
   }
 
   return (

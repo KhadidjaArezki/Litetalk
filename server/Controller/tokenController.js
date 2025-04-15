@@ -33,7 +33,7 @@ const getTokenController = async (req, res) => {
         error: "Refresh token missing or invalid",
       })
     }
-    //console.log('No JsonWebTokenError')
+    console.log('No JsonWebTokenError')
     // Detected refresh token reuse!
     if (!foundUser) {
       const hackedUser = await User.findOne({
@@ -44,7 +44,7 @@ const getTokenController = async (req, res) => {
       await hackedUser.save()
       return res.sendStatus(403) //Forbidden
     }
-    //console.log('User was not hacked')
+    console.log('User was not hacked')
     
     // Remove old rt token from user rt array
     const newRefreshTokenArray = foundUser.refreshToken.filter(
@@ -62,20 +62,25 @@ const getTokenController = async (req, res) => {
     // Check that rt corresponds to our user
     if (foundUser.id !== decoded.id) return res.sendStatus(403)
     
-    //console.log('user id OK')
+    console.log('user id OK')
     // All is good
-    const { token, refreshToken } = generateAllTokens(foundUser)
-    const userToUpdate = {
-      refreshToken: [...newRefreshTokenArray, refreshToken],
+    try {
+      const { token, refreshToken } = generateAllTokens(foundUser)
+      const userToUpdate = {
+        refreshToken: [...newRefreshTokenArray, refreshToken],
+      }
+      await User.findByIdAndUpdate(
+        foundUser.id,
+        {
+          ...userToUpdate,
+          updatedAt: new Date().toISOString(),
+        },
+        { new: true },
+      )
+    } catch (e) {
+      res.cookie(req.cookies)
+      return res.sendStatus(500)
     }
-    await User.findByIdAndUpdate(
-      foundUser.id,
-      {
-        ...userToUpdate,
-        updatedAt: new Date().toISOString(),
-      },
-      { new: true },
-    )
     // Creates Secure Cookie with refresh token
     res.cookie("jwt", refreshToken, {
       httpOnly: true,

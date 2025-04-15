@@ -8,6 +8,7 @@ import {
   selectCurrentFriends,
   removeFriend,
 } from '../../reducers/authReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import SearchBox from '../searchbox/SearchBox'
 import SearchResults from '../search_results/SearchResults'
 import { useUpdateUserMutation } from '../../reducers/api/userApiSlice'
@@ -19,12 +20,27 @@ function Friends() {
   const { file } = useSelector(selectCurrentPicture)
   const friends = useSelector(selectCurrentFriends)
 
+  const [errMsg, setErrMsg] = useState('')
+
   const [updateUser] = useUpdateUserMutation()
   const dispatch = useDispatch()
 
   /* Initially, theh component renders the entire friends list */
   const [currentResults, setCurrentResults] = useState([...friends])
   const container = 'Friends'
+
+  useEffect(() => {
+    if (errMsg) {
+      dispatch(setNotification(
+        {
+          message: errMsg,
+          type: 'error',
+        },
+        5,
+      ))
+      setErrMsg('')
+    }
+  }, [errMsg])
 
   /* Re-render component every time friends are updated
    * Compare friends and current results to find a
@@ -71,19 +87,24 @@ function Friends() {
         { type: file.contentType },
       )
       : null
-    const updatedUser = await updateUser({
+    const data = await updateUser({
       id,
       username,
       email,
       picture: pictureFileToSend,
       friends: getNewFriends(),
-    }).unwrap()
-    const updatedFriends = updatedUser.friends
-    /* Find the friend that is in currentFriends but not in updatedFriends */
-    const friendToRemove = friends.find(
-      (friend) => !updatedFriends.some((f) => f.id === friend.id),
-    )
-    dispatch(removeFriend(friendToRemove.id))
+    })
+    if (data.error) {
+      setErrMsg('Failed to remove friend')
+    } else {
+      const updatedUser = data.data
+      const updatedFriends = updatedUser.friends
+      /* Find the friend that is in currentFriends but not in updatedFriends */
+      const friendToRemove = friends.find(
+        (friend) => !updatedFriends.some((f) => f.id === friend.id),
+      )
+      dispatch(removeFriend(friendToRemove.id))
+    }
   }
 
   return (

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/self-closing-comp */
-import { useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useUpdateUserMutation } from '../../reducers/api/userApiSlice'
@@ -12,6 +12,7 @@ import {
   selectCurrentFriends,
   updateProfile,
 } from '../../reducers/authReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import ProfileForm from './ProfileForm'
 import styles from '../../styles/Profile-styles/EditProfile.module.css'
 import Button from '../button/Button'
@@ -29,6 +30,21 @@ function EditProfilePage() {
   const [updateUser] = useUpdateUserMutation()
   const profileFormRef = useRef({})
 
+  const [errMsg, setErrMsg] = useState('')
+
+  useEffect(() => {
+    if (errMsg) {
+      dispatch(setNotification(
+        {
+          message: errMsg,
+          type: 'error',
+        },
+        5,
+      ))
+      setErrMsg('')
+    }
+  }, [errMsg])
+
   const handleSave = async (event) => {
     event.preventDefault()
     const { newUsername, newEmail, isFormValid } = profileFormRef.current
@@ -40,16 +56,21 @@ function EditProfilePage() {
           { type: file.contentType },
         )
         : null
-      const updatedUser = await updateUser({
+      const data = await updateUser({
         id,
         username: newUsername,
         email: newEmail,
         friends,
         picture: pictureFileToSend,
-      }).unwrap()
-      dispatch(saveProfilePictureToDB(updatedUser.picture))
-      dispatch(updateProfile(updatedUser))
-      navigate('/profile')
+      })
+      if (data.error) {
+        setErrMsg('Failed to update profile')
+      } else {
+        const updatedUser = data.data
+        dispatch(saveProfilePictureToDB(updatedUser.picture))
+        dispatch(updateProfile(updatedUser))
+        navigate('/profile')
+      }
     }
   }
 

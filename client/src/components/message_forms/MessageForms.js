@@ -1,7 +1,8 @@
-import { useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSocket } from '../../context/socketContext'
 import { selectCurrentId } from '../../reducers/authReducer'
+import { setNotification } from '../../reducers/notificationReducer'
 import styles from '../../styles/ChatRoom-styles/MessageForms.module.css'
 import NewMessageForm from '../new_message_form/NewMessageForm'
 import NewPictureButton from '../button/NewPictureButton'
@@ -20,6 +21,21 @@ function MessageForms() {
 
   const imageModalRef = useRef()
   const dispatch = useDispatch()
+
+  const [errMsg, setErrMsg] = useState('')
+
+  useEffect(() => {
+    if (errMsg) {
+      dispatch(setNotification(
+        {
+          message: errMsg,
+          type: 'error',
+        },
+        5,
+      ))
+      setErrMsg('')
+    }
+  }, [errMsg])
 
   useEffect(() => {
     /* Dispatch an addUser event to add current user   */
@@ -43,14 +59,19 @@ function MessageForms() {
   }
 
   const SendPictureFormHandler = async (imgFile) => {
-    const createdMessage = await createImageMsg({
+    const data = await createImageMsg({
       userId,
       friendId: currentFriendId,
       image: imgFile,
       timestamp: new Date().toISOString(),
-    }).unwrap()
-    dispatch(appendMessage(createdMessage))
-    sendMessagetoSocket(imgFile)
+    })
+    if (data.error) {
+      setErrMsg('Failed to send picture')
+    } else {
+      const createdMessage = data.data
+      dispatch(appendMessage(createdMessage))
+      sendMessagetoSocket(imgFile)
+    }
   }
 
   return (

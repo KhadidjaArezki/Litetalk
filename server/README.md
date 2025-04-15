@@ -28,7 +28,7 @@ This project uses the MERN stack:
 ### Token
 
 - Handles requests for new access token
-- Logs the user and clear the cookie
+- Logs out the user and clear the cookie
 
 ### Message
 
