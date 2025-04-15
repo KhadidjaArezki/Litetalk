@@ -15,8 +15,7 @@
     align-items: center;
     padding: 10px 26px;
     background-color: var(--clr-signup-page);   
-    height: inherit;
-    max-height: min(100vh, 1080px);
+    height: min(100vh, 1080px);
 }
 
 .Signup__main__logo-container {

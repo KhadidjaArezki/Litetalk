@@ -185,8 +185,15 @@
   }
   
   .button--start-a-search {
-    margin-top: 20px;
-    font-size: 24px;
+    margin-top: 16px !important;
+    font-size: 20px;
+    width: 204px;
+    height: 54px;
+  }
+  
+  .button--start-a-search img {
+    width: 25px;
+    height: 25px;
   }
   
   .button--start-a-chat--friends {
