@@ -37,14 +37,14 @@ function Chats() {
       const styles = {
         margin: 0,
         marginTop: '24px',
+        marginBottom: '16px',
       }
       return (
-        <div id="chats" className="container main">
-          <h2>
-            {`Hello ${username}! Welcome to LiteTalk!`}
-          </h2>
-          <h4>To look for your friends and add them</h4>
-          <h4>click the search button below</h4>
+        <div id="chats" className="container main" style={{ marginTop: '24px' }}>
+          <h3>
+            {`👋 Hi ${username}! Welcome to LiteTalk!`}
+          </h3>
+          <h4>Search for your friends and add them</h4>
           <Button
             text="Start Search"
             className={`${btnStyles['button--start-a-search']}`}
@@ -56,8 +56,7 @@ function Chats() {
           <br />
           {dummyUser && (
             <>
-              <h4>MeanWhile, you can try the app by chatting with dummy_user</h4>
-              <br />
+              <h4>Or try the app by chatting with dummy_user</h4>
               <SearchResult
                 result={dummyUser}
                 container="people"
