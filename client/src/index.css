@@ -31,7 +31,7 @@
 
     /* font families */
     --ff-text: 'Hind', sans-serif;
-    --ff-heading: 'Hind Guntur', sans-serif;
+    --ff-heading: 'Hind', sans-serif;
 
     /* font-sizes */
     font-size: 62.5%;
@@ -57,7 +57,16 @@ h4,
 h5,
 h6 {
   font-family: var(--ff-heading);
-  color: var(--clr-london-hue);
+  color: #6a6a6a;
+  font-weight: 500;
+}
+
+h3 {
+  font-size: x-large;
+}
+
+h4 {
+  font-size: large;
 }
 
 ul {
