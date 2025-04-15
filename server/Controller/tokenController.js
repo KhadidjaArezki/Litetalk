@@ -12,7 +12,7 @@ const getTokenController = async (req, res) => {
   if (!cookies?.jwt) {
     return res.sendStatus(401)
   }
-
+  
   const oldRefreshToken = cookies.jwt
   res.clearCookie("jwt", {
     httpOnly: true,
@@ -21,10 +21,27 @@ const getTokenController = async (req, res) => {
   })
   
   // console.log(`Refresh Token: ${oldRefreshToken}`)
-
+  
+  let foundUser = null
   // Calling exec is not neccessary, but helps with debugging
-  const foundUser = await User.findOne({ refreshToken: oldRefreshToken }).exec()
-  // console.log(`found user: ${foundUser?.refreshToken}`)
+  try {
+    foundUser = await User.findOne({ refreshToken: oldRefreshToken }).exec()
+    // console.log(`found user: ${foundUser?.refreshToken}`)
+  } catch (e) {
+    const originalCookieHeader = req.headers['set-cookie'] || req.headers.cookie
+    if (originalCookieHeader) {
+      res.setHeader('Set-Cookie', originalCookieHeader)
+    }
+    res.cookie("jwt", oldRefreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    })
+    return res.status(500).json({
+      error: 'Database error occurred',
+    })
+  }
 
   jwt.verify(oldRefreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
     //console.log('Verifiying Refresh Token')
@@ -77,18 +94,29 @@ const getTokenController = async (req, res) => {
         },
         { new: true },
       )
+      // Creates Secure Cookie with refresh token
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      })
+      res.status(200).json({ token })
     } catch (e) {
-      res.cookie(req.cookies)
-      return res.sendStatus(500)
+      const originalCookieHeader = req.headers['set-cookie'] || req.headers.cookie;
+      if (originalCookieHeader) {
+        res.setHeader('Set-Cookie', originalCookieHeader);
+      }
+      res.cookie("jwt", oldRefreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+      })
+      return res.status(500).json({
+        error: 'Database error occurred',
+      })
     }
-    // Creates Secure Cookie with refresh token
-    res.cookie("jwt", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "None",
-      maxAge: 12 * 60 * 60 * 1000,
-    })
-    res.status(200).json({ token })
   })
 }
 
