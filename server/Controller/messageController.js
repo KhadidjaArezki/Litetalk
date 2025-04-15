@@ -103,7 +103,9 @@ const postMessageController = async (req, res, next) => {
       'Require userId, friendId, content and timestamp to not be null or undefined',
       400,
     )
-    return res.status(400)
+    return res.status(400).json({
+      error: 'Bad request'
+    })
   }
 
   try {
@@ -124,7 +126,9 @@ const postMessageController = async (req, res, next) => {
     })
     res.status(201).send(result)
   } catch (error) {
-    return res.status(500)
+    return res.status(500).json({
+      error: 'Failed to save new message'
+    })
   }
 }
 
