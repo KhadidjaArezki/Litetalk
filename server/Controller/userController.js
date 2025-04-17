@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const Message = require('../models/message')
 const { generateAllTokens, getTokenFromHeader } = require('../utils/helper')
 
 const getUsersController = async (_, res) => {
@@ -158,17 +159,27 @@ const deleteUserController = async (req, res) => {
     })
   }
 
-  await User.findByIdAndRemove(req.params.id)
-  res.clearCookie("jwt", {
-    httpOnly: true,
-    sameSite: "None",
-    secure: true,
-  })
-  
-  res.status(200).json({
-    success: true,
-    message: "user deleted"
-  })
+  try {
+    // Delete all messages where the user is either the sender or receiver
+    await Message.deleteMany({
+      $or: [{ sender: req.params.id }, { receiver: req.params.id }],
+    })
+    await User.findByIdAndRemove(req.params.id)
+
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+    })
+    res.status(200).json({
+      success: true,
+      message: "user deleted"
+    })
+  } catch (error) {
+    return res.status(500).json({
+      error: 'Failed to delete user'
+    })
+  } 
 }
 
 module.exports={
