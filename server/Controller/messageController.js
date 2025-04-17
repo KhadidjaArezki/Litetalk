@@ -54,15 +54,24 @@ const getMessageController = async (req, res, next) => {
       { receiver: id },
     ])
 
+    // Check which friends exist in the database
+    const existingFriends = await User.find(
+      { _id: { $in: Array.from(user.contacts) } },
+      { _id: 1 } // Projection: Only return the `_id` field
+    ).then(users => users.map(user => user._id.toString())) // Convert to array of strings
+
     const chatsObj = {}
     userMessages.forEach(m => {
-      const friendId = m.sender == id ? m.receiver : m.sender
-      if (! (friendId in chatsObj) ) chatsObj[friendId] = []
-      chatsObj[friendId].push(m)
+      const friendId = (m.sender == id ? m.receiver : m.sender).toString()
+      if (existingFriends.includes(friendId)) {
+        if (! (friendId in chatsObj) ) chatsObj[friendId] = []
+        chatsObj[friendId].push(m)
+      }
     })
 
     const chats = []
     for (const friendId in chatsObj) {
+      
       chats.push({
         friendId,
         messages: chatsObj[friendId]
